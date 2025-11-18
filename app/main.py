@@ -11,6 +11,8 @@ from app.base import Base
 from models.member import Member
 from models.fitness_goal import FitnessGoal
 from models.room import Room
+from models.admin_staff import AdminStaff
+from models.trainer_availability import TrainerAvailability
 
 DB_USER = 'postgres'
 DB_PASSWORD = '1234'
@@ -25,10 +27,8 @@ def create_connection():
         with engine.connect() as conn:
             print("Connected")
     except Exception as e:
-        print(f"Failed: ")
+        print(f"Failed: {e}")
         return
-
-    Base.metadata.create_all(engine, checkfirst=True)
 
     with Session(engine) as session:
         pass
