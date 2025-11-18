@@ -8,6 +8,5 @@ class Member(Base):
     date_of_birth = Column(Date, NotNull)
     gender = Column(String, NotNull)
     phone_number = Column(String, NotNull)
-    A_id  = Column(Integer, ForeignKey("A.id"))
     
 
