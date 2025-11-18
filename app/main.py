@@ -10,6 +10,7 @@ sys.path.insert(0, str(parent_dir))
 from app.base import Base
 from models.member import Member
 from models.fitness_goal import FitnessGoal
+from models.room import Room
 
 DB_USER = 'postgres'
 DB_PASSWORD = '1234'
@@ -19,7 +20,7 @@ DB_NAME = 'Health and Fitness Club Management System'
 
 engine = create_engine(f"postgresql+psycopg2://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}")
 
-def main():
+def create_connection():
     try:
         with engine.connect() as conn:
             print("Connected")
@@ -33,6 +34,5 @@ def main():
         pass
 
 if __name__ == '__main__':
-    main()
-    memberTableCreate = Member()
-    fitnessGoalTableCreate = FitnessGoal()
+    create_connection()
+    Base.metadata.create_all(engine, checkfirst=True)

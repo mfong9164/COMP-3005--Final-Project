@@ -10,7 +10,7 @@ from sqlalchemy import *
 
 class Member(Base):
     __tablename__ = "Member"
-    email = Column(String, primary_key=True, nullable=False, unique=True)
+    email = Column(String, primary_key=True)
     name = Column(String, nullable=False)
     date_of_birth = Column(Date, nullable=False)
     gender = Column(String, nullable=False)
