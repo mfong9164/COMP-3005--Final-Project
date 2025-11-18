@@ -1,7 +1,15 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
+import sys
+from pathlib import Path
 
-import base
+# Add parent directory to path
+parent_dir = Path(__file__).parent.parent
+sys.path.insert(0, str(parent_dir))
+
+from app.base import Base
+from models.member import Member
+from models.fitness_goal import FitnessGoal
 
 DB_USER = 'postgres'
 DB_PASSWORD = '1234'
@@ -26,3 +34,5 @@ def main():
 
 if __name__ == '__main__':
     main()
+    memberTableCreate = Member()
+    fitnessGoalTableCreate = FitnessGoal()
