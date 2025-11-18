@@ -14,11 +14,11 @@ class GroupFitnessBill(Base):
     bill_id = Column(
         Integer,
         ForeignKey("Bill.id"),
-        primary_key=True
+        primary_key = True,
     )
 
     session_id = Column(
         Integer,
         ForeignKey("GroupFitnessClass.id"),
-        primary_key=True
+        primary_key = True
     )

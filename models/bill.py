@@ -21,7 +21,6 @@ class Bill(Base):
     member_email = Column(
         String,
         ForeignKey("Member.email"), 
-        primary_key=True
     )
 
     admin_email = Column(

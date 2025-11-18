@@ -9,8 +9,8 @@ from app.base import Base
 from sqlalchemy import Column, Integer, String, ForeignKey, Float
 from sqlalchemy.dialects.postgresql import TSRANGE
 
-class PersonalTrainingSession(Base):
-    __tablename__ = "PersonalTrainingSession"
+class GroupFitnessClass(Base):
+    __tablename__ = "GroupFitnessClass"
 
     id = Column(
         Integer, 
