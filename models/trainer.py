@@ -7,7 +7,7 @@ sys.path.insert(0, str(parent_dir))
 
 from app.base import Base
 from sqlalchemy import *
-from enums import Gender
+from models.enums import Gender
 
 class Trainer(Base):
     __tablename__ = "Trainer"

@@ -15,8 +15,8 @@ from models.room import Room
 from models.admin_staff import AdminStaff
 from models.trainer_availability import TrainerAvailability
 from models.bill import Bill
-from models.group_fitness_bill import GroupFitnessBill
-from models.personal_training_bill import PersonalTrainingBill
+# from models.group_fitness_bill import GroupFitnessBill
+# from models.personal_training_bill import PersonalTrainingBill
 from models.trainer import Trainer
 
 DB_USER = 'postgres'
