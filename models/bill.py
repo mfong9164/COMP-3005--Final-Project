@@ -14,7 +14,8 @@ class Bill(Base):
     __tablename__ = 'Bill'
 
     id = Column(
-        Integer, primary_key=True
+        Integer, 
+        primary_key=True
     )
     
     member_email = Column(
