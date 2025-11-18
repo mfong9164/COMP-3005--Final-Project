@@ -9,8 +9,10 @@ sys.path.insert(0, str(parent_dir))
 
 from app.base import Base
 from models.member import Member
-from models.fitness_goal import FitnessGoal, Type
-from models.health_metric import HealthMetric
+from models.fitness_goal import FitnessGoal
+from models.room import Room
+from models.admin_staff import AdminStaff
+from models.trainer_availability import TrainerAvailability
 
 DB_USER = 'postgres'
 DB_PASSWORD = '1234'
@@ -20,18 +22,17 @@ DB_NAME = 'Health and Fitness Club Management System'
 
 engine = create_engine(f"postgresql+psycopg2://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}")
 
-def main():
+def create_connection():
     try:
         with engine.connect() as conn:
             print("Connected")
     except Exception as e:
-        print(f"Failed: ")
+        print(f"Failed: {e}")
         return
-
-    Base.metadata.create_all(engine, checkfirst=True)
 
     with Session(engine) as session:
         pass
 
 if __name__ == '__main__':
-    main()
+    create_connection()
+    Base.metadata.create_all(engine, checkfirst=True)
