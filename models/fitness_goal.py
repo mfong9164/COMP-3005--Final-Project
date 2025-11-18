@@ -6,7 +6,7 @@ parent_dir = Path(__file__).parent.parent
 sys.path.insert(0, str(parent_dir))
 
 from app.base import Base
-from sqlalchemy import *
+from sqlalchemy import Column, String, ForeignKey, Enum, Integer
 import enum
 
 class Type(enum.Enum):
@@ -29,5 +29,6 @@ class FitnessGoal(Base):
     )
 
     amount = Column(
-        Integer
+        Integer,
+        nullable=False
     )

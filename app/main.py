@@ -9,7 +9,8 @@ sys.path.insert(0, str(parent_dir))
 
 from app.base import Base
 from models.member import Member
-from models.fitness_goal import FitnessGoal
+from models.fitness_goal import FitnessGoal, Type
+from models.health_metric import HealthMetric
 
 DB_USER = 'postgres'
 DB_PASSWORD = '1234'
@@ -34,5 +35,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-    memberTableCreate = Member()
-    fitnessGoalTableCreate = FitnessGoal()
