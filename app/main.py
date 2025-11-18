@@ -1,5 +1,7 @@
 from sqlalchemy import create_engine
-from sqlalchemy.orm import declarative_base, Session
+from sqlalchemy.orm import Session
+
+import base
 
 DB_USER = 'postgres'
 DB_PASSWORD = '1234'
@@ -17,7 +19,6 @@ def main():
         print(f"Failed: ")
         return
 
-    Base = declarative_base()
     Base.metadata.create_all(engine, checkfirst=True)
 
     with Session(engine) as session:
