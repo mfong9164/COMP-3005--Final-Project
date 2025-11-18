@@ -5,7 +5,6 @@ class PaymentMethod(enum.Enum):
     DEBIT = 1
     CREDIT = 2
 
-
 class GoalType(enum.Enum):
     WEIGHT = 0
     BODY_FAT_PERCENTAGE = 1
