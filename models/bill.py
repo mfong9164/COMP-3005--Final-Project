@@ -29,7 +29,7 @@ class Bill(Base):
 
     admin_email = Column(
         String,
-        ForeignKey("Admin.email")
+        ForeignKey("AdminStaff.email")
     )
 
     amount_due = Column(
