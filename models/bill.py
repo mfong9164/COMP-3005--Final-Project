@@ -7,12 +7,8 @@ sys.path.insert(0, str(parent_dir))
 
 from app.base import Base
 from sqlalchemy import Column, Integer, String, ForeignKey, Float, Enum, Boolean
-import enum
+from enums import PaymentMethod
 
-class PaymentMethod(enum.Enum):
-    CASH = 0
-    DEBIT = 1
-    CREDIT = 2
 
 class Bill(Base):
     __tablename__ = 'Bill'

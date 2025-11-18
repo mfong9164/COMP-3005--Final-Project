@@ -9,12 +9,10 @@ from app.base import Base
 from sqlalchemy import *
 from enums import Gender
 
-class Member(Base):
-    __tablename__ = "Member"
+class Trainer(Base):
+    __tablename__ = "Trainer"
     email = Column(String, primary_key=True)
     name = Column(String, nullable=False)
-    date_of_birth = Column(Date, nullable=False)
     gender = Column(Enum(Gender), nullable=False)
-    phone_number = Column(String, nullable=False)
     
 

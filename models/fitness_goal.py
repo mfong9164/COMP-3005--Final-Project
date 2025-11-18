@@ -7,12 +7,8 @@ sys.path.insert(0, str(parent_dir))
 
 from app.base import Base
 from sqlalchemy import Column, String, ForeignKey, Enum, Integer
-import enum
+from enums import GoalType
 
-class Type(enum.Enum):
-    WEIGHT = 0
-    BODY_FAT_PERCENTAGE = 1
-    CARDIO = 2
 
 class FitnessGoal(Base):
     __tablename__ = "FitnessGoal"
@@ -23,8 +19,8 @@ class FitnessGoal(Base):
         primary_key=True
     )
 
-    type = Column(
-        Enum(Type), 
+    Goaltype = Column(
+        Enum(GoalType), 
         primary_key=True
     )
 
