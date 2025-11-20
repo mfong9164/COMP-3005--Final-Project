@@ -15,5 +15,4 @@ class Room(Base):
     ## Change to ENUM for options
     room_type = Column(String, nullable = False)
 
-    capacity = Column(Integer, nullable = False)
-    
+    capacity = Column(Integer, nullable = False) 

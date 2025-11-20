@@ -26,8 +26,8 @@ class Bill(Base):
 
     admin_email = Column(
         String,
-        ForeignKey("AdminStaff.email"),
-        nullable = False
+        ForeignKey("Admin.email"),
+        nullable=False
     )
 
     amount_due = Column(
@@ -41,7 +41,7 @@ class Bill(Base):
     )
 
     ## True for paid, false for unpaid
-    status = Column(
+    paid = Column(
         Boolean,
         nullable=False,
         default=False

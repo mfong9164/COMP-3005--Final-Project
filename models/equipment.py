@@ -7,6 +7,7 @@ sys.path.insert(0, str(parent_dir))
 
 from app.base import Base
 from sqlalchemy import *
+from models.enums import EquipmentStatus
 
 
 class Equipment(Base):
@@ -14,4 +15,4 @@ class Equipment(Base):
     equipment_id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
     room_id = Column(Integer, ForeignKey("Room.room_id"), nullable = False)
-    status = Column(String, nullable = False)
+    status = Column(Enum(EquipmentStatus), nullable=False, default=EquipmentStatus.IN_SERVICE)
