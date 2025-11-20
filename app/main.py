@@ -20,12 +20,24 @@ from models.group_fitness_bill import GroupFitnessBill
 from models.personal_training_session import PersonalTrainingSession
 from models.personal_training_bill import PersonalTrainingBill
 from models.trainer import Trainer
+from models.equipment import Equipment
+from models.maintenance_ticket import MaintenanceTicket
+from models.participates_in import ParticipatesIn
 
 DB_USER = 'postgres'
 DB_PASSWORD = '1234'
 DB_HOST = 'localhost'
 DB_PORT = '5432'
 DB_NAME = 'Health and Fitness Club Management System'
+
+def drop_all_tables():
+    try:
+        engine = create_engine(f"postgresql+psycopg2://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}")
+        Base.metadata.drop_all(engine)
+        print("All tables dropped successfully")
+    except Exception as e:
+        print(f"Failed to drop tables: {e}")
+        return
 
 def create_connection():
     try:
@@ -42,4 +54,5 @@ def create_connection():
 
 if __name__ == '__main__':
     create_connection()
+    drop_all_tables()
     

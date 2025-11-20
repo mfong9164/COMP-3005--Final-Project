@@ -17,7 +17,7 @@ class GroupFitnessBill(Base):
         primary_key = True,
     )
 
-    session_id = Column(
+    class_id = Column(
         Integer,
         ForeignKey("GroupFitnessClass.id"),
         primary_key = True

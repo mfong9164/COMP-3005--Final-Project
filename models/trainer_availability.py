@@ -1,6 +1,5 @@
 import sys
 from pathlib import Path
-import enum
 
 # Add parent directory to path
 parent_dir = Path(__file__).parent.parent
@@ -13,6 +12,6 @@ from models.enums import AvailabilityType
 
 class TrainerAvailability(Base):
     __tablename__ = "TrainerAvailability"
-    email = Column(String, primary_key=True)
+    email = Column(String, ForeignKey("Trainer.email"), primary_key=True)
     time_stamp_range = Column(TSRANGE, primary_key=True)
-    availability_type = Column(Enum(AvailabilityType))
+    availability_type = Column(Enum(AvailabilityType), nullable = False)

@@ -6,7 +6,7 @@ parent_dir = Path(__file__).parent.parent
 sys.path.insert(0, str(parent_dir))
 
 from app.base import Base
-from sqlalchemy import Column, String, ForeignKey, DateTime, func
+from sqlalchemy import *
 
 class HealthMetric(Base):
     __tablename__ = 'HealthMetric'
@@ -22,3 +22,9 @@ class HealthMetric(Base):
         primary_key=True,
         server_default=func.now()
     )
+    
+    height = Column(Float, nullable = False)
+
+    weight = Column(Float, nullable = False)
+
+    heart_rate = Column(Integer, nullable = False)

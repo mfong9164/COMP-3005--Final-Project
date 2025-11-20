@@ -19,7 +19,7 @@ class FitnessGoal(Base):
         primary_key=True
     )
 
-    Goaltype = Column(
+    goal_type = Column(
         Enum(GoalType), 
         primary_key=True
     )

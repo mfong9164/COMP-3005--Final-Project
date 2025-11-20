@@ -1,0 +1,6 @@
+can create a view to view unpaid bills with a memebr and admin info
+
+create a index on ParticipatesIn.class_id since we will frequently check how many memebrs are in a class to enforce capactiy
+
+can create a trigger on a new column paid_date for Bill table when a Bill status chnages from False to True (unpaid to paid) which will automatically
+set the paid_date to the current date
