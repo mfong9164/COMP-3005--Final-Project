@@ -19,3 +19,7 @@ class Gender(enum.Enum):
     MALE = 0
     FEMALE = 1
     OTHER = 2
+
+class EquipmentStatus(enum.Enum):
+    IN_SERVICE = 0
+    OUT_OF_SERVICE = 1

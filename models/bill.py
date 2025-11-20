@@ -20,12 +20,14 @@ class Bill(Base):
     
     member_email = Column(
         String,
-        ForeignKey("Member.email"), 
+        ForeignKey("Member.email"),
+        nullable=False
     )
 
     admin_email = Column(
         String,
-        ForeignKey("AdminStaff.email")
+        ForeignKey("Admin.email"),
+        nullable=False
     )
 
     amount_due = Column(
@@ -38,7 +40,7 @@ class Bill(Base):
         nullable=False
     )
 
-    status = Column(
+    paid = Column(
         Boolean,
         nullable=False,
         default=False

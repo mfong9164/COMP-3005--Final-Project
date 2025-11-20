@@ -6,12 +6,17 @@ parent_dir = Path(__file__).parent.parent
 sys.path.insert(0, str(parent_dir))
 
 from app.base import Base
-from sqlalchemy import *
+from sqlalchemy import Column, String
 
-class Room(Base):
-    __tablename__ = "Room"
-    
-    id = Column(
-        Integer, 
+class Admin(Base):
+    __tablename__ = "Admin"
+
+    email = Column(
+        String, 
         primary_key=True
-    )    
+    
+    )
+    name = Column(
+        String, 
+        nullable=False
+    )

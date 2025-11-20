@@ -31,7 +31,7 @@ class PersonalTrainingSession(Base):
 
     room_id = Column(
         Integer,
-        ForeignKey("Room.room_id"),
+        ForeignKey("Room.id"),
         nullable=False
     )
 
