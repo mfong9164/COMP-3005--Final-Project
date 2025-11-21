@@ -8,6 +8,7 @@ sys.path.insert(0, str(parent_dir))
 from app.base import Base
 from sqlalchemy import Column, Integer, String, ForeignKey, Float, Enum, Boolean
 from models.enums import PaymentMethod
+from sqlalchemy.orm import relationship
 
 
 class Bill(Base):
@@ -46,3 +47,15 @@ class Bill(Base):
         nullable=False,
         default=False
     )
+    
+    # Many bills can belong to one member
+    member = relationship("Member", back_populates="bills")
+    
+    # Many bills can be processed by one admin
+    admin = relationship("Admin", back_populates="bills")
+    
+    # One bill can be linked to many personal training sessions via PersonalTrainingBill
+    personal_training_bills = relationship("PersonalTrainingBill", back_populates="bill")
+    
+    # One bill can be linked to many group fitness classes via GroupFitnessBill
+    group_fitness_bills = relationship("GroupFitnessBill",back_populates="bill")

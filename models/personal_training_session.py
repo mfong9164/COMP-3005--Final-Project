@@ -8,6 +8,7 @@ sys.path.insert(0, str(parent_dir))
 from app.base import Base
 from sqlalchemy import Column, Integer, String, ForeignKey, Float
 from sqlalchemy.dialects.postgresql import TSRANGE
+from sqlalchemy.orm import relationship
 
 class PersonalTrainingSession(Base):
     __tablename__ = "PersonalTrainingSession"
@@ -44,3 +45,15 @@ class PersonalTrainingSession(Base):
         Float,
         nullable=False
     )
+
+    # Many sessions belong to one trainer
+    trainer = relationship("Trainer", back_populates="personal_training_sessions")
+
+    # Many sessions belong to one member
+    member = relationship("Member", back_populates="personal_training_sessions")
+
+    # Many sessions take place in one room
+    room = relationship("Room", back_populates="personal_training_sessions")
+
+    # One session can be linked to many bills via PersonalTrainingBill
+    personal_training_bills = relationship("PersonalTrainingBill", back_populates="session")

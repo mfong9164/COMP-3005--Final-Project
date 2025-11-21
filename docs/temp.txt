@@ -4,3 +4,15 @@ create a index on ParticipatesIn.class_id since we will frequently check how man
 
 can create a trigger on a new column paid_date for Bill table when a Bill status chnages from False to True (unpaid to paid) which will automatically
 set the paid_date to the current date
+
+The relationship function tells python how the classes are connected in the database. it links two mapped classes together and lets you go from one
+object to its related attributes (like member.bills). eliminates the need to write sql joins. basiucally just makes the db links in pyton attributes
+making it feel more natural than a pile of tables. 
+
+it tells the orm which class (table) is on the other side. then when you access the relationship attribute on an object, SQLAlchemy automatically
+generates and executes the necessary sql query to get the data
+
+back_populates tells sql alchemy these two attributes are the two ends of the same relationship and to keep them in sync.
+relationship() defines the link; back_populates pairs the two sides of that link.
+
+Need to normalize this db schema next, the write functions.

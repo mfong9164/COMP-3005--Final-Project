@@ -8,6 +8,7 @@ sys.path.insert(0, str(parent_dir))
 from app.base import Base
 from sqlalchemy import Column, String, ForeignKey, Enum, Integer
 from models.enums import GoalType
+from sqlalchemy.orm import relationship
 
 
 class FitnessGoal(Base):
@@ -28,3 +29,6 @@ class FitnessGoal(Base):
         Integer,
         nullable=False
     )
+
+    # Many fitness goals belong to one member
+    member = relationship("Member", back_populates="fitness_goals")

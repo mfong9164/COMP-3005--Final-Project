@@ -7,6 +7,7 @@ sys.path.insert(0, str(parent_dir))
 
 from app.base import Base
 from sqlalchemy import *
+from sqlalchemy.orm import relationship
 
 class MaintenanceTicket(Base):
     __tablename__ = "MaintenanceTicket"
@@ -15,3 +16,9 @@ class MaintenanceTicket(Base):
     equipment_id = Column(Integer, ForeignKey("Equipment.equipment_id"), nullable = False)
     ## Maybe change this to a int or enum?
     description = Column(Text, nullable = False)
+
+    # Many tickets can be created by one admin
+    admin = relationship("Admin", back_populates="maintenance_tickets")
+
+    # Many tickets can refer to one equipment item
+    equipment = relationship("Equipment", back_populates="maintenance_tickets")

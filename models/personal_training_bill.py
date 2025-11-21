@@ -7,6 +7,7 @@ sys.path.insert(0, str(parent_dir))
 
 from app.base import Base
 from sqlalchemy import Column, Integer, ForeignKey
+from sqlalchemy.orm import relationship
 
 class PersonalTrainingBill(Base):
     __tablename__ = "PersonalTrainingBill"
@@ -22,3 +23,9 @@ class PersonalTrainingBill(Base):
         ForeignKey("PersonalTrainingSession.id"),
         primary_key=True
     )
+
+    # Many personal training bill links belong to one bill
+    bill = relationship("Bill", back_populates="personal_training_bills")
+
+    # Many personal training bill links belong to one session
+    session = relationship("PersonalTrainingSession",back_populates="personal_training_bills")

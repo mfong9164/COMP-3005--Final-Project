@@ -7,6 +7,7 @@ sys.path.insert(0, str(parent_dir))
 
 from app.base import Base
 from sqlalchemy import Column, String
+from sqlalchemy.orm import relationship
 
 class Admin(Base):
     __tablename__ = "Admin"
@@ -20,3 +21,9 @@ class Admin(Base):
         String, 
         nullable=False
     )
+
+    # One admin can create many bills
+    bills = relationship("Bill", back_populates="admin")
+
+    # One admin can create many maintenance tickets
+    maintenance_tickets = relationship("MaintenanceTicket", back_populates="admin")
