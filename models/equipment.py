@@ -14,7 +14,7 @@ from sqlalchemy.orm import relationship
 class Equipment(Base):
     __tablename__ = "Equipment"
     
-    equipment_id = Column(
+    id = Column(
         Integer, 
         primary_key=True
     )

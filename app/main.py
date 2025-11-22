@@ -24,13 +24,13 @@ from models.trainer import Trainer
 from models.equipment import Equipment
 from models.maintenance_ticket import MaintenanceTicket
 from models.participates_in import ParticipatesIn
+from app.sample_data import getSampleData
 
 
 DB_USER = 'postgres'
 DB_HOST = 'localhost'
 DB_PORT = '5432'
 DB_NAME = 'Health and Fitness Club Management System'
-
 
 def create_connection():
     try:
@@ -45,9 +45,15 @@ def create_connection():
         quit()
 
     with Session(engine) as session:
-        User_email = input("User Email: ")
-        if (session.execute(select(Member.email).where(Member.email == User_email)) == User_email):
-            print("member login")
+        try:
+            sample_data = getSampleData()
+            session.add_all(sample_data)
+            User_email = input("User Email: ")
+            if (session.execute(select(Member.email).where(Member.email == User_email)) == User_email):
+                print("member login")
+        except Exception as e:
+            print(f"Failed: {e}")
+            quit()
 
 if __name__ == '__main__':
     create_connection()
