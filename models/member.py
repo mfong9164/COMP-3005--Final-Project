@@ -12,11 +12,11 @@ from sqlalchemy.orm import relationship
 
 class Member(Base):
     __tablename__ = "Member"
-    email = Column(String, primary_key=True)
-    name = Column(String, nullable=False)
+    email = Column(String(255), primary_key=True)
+    name = Column(String(100), nullable=False)
     date_of_birth = Column(Date, nullable=False)
     gender = Column(Enum(Gender), nullable=False)
-    phone_number = Column(String, nullable=False)
+    phone_number = Column(String(20), nullable=False)
 
     # One member can have many bills
     bills = relationship("Bill", back_populates = "member")
