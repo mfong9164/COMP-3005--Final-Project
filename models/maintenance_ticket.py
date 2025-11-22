@@ -16,7 +16,7 @@ class MaintenanceTicket(Base):
     
     equipment_id = Column(
         Integer, 
-        ForeignKey("Equipment.id"), 
+        ForeignKey("Equipment.equipment_id"), 
         nullable = False
     )
 

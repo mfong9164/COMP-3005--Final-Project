@@ -25,7 +25,7 @@ class GroupFitnessClass(Base):
 
     trainer_email = Column(
         String(255),
-        ForeignKey("Trainer.email"),
+        ForeignKey("Trainer.trainer_email"),
         nullable=False
     )
 

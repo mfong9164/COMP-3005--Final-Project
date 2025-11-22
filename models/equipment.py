@@ -14,13 +14,14 @@ from sqlalchemy.orm import relationship
 class Equipment(Base):
     __tablename__ = "Equipment"
     
-    id = Column(
+    equipment_id = Column(
         Integer, 
-        primary_key=True
+        primary_key=True,
+        autoincrement=True
     )
 
     name = Column(
-        String, 
+        String(255), 
         nullable=False
     )
 

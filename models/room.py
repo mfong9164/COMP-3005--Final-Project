@@ -10,18 +10,20 @@ from sqlalchemy import *
 from sqlalchemy.orm import relationship
 from models.enums import RoomType
 
+
 class Room(Base):
     __tablename__ = "Room"
     __table_args__ = (
         CheckConstraint('capacity > 0', name='check_capacity_positive'),
     )
 
+    room_id = Column(Integer, primary_key=True, autoincrement=True)
+
     room_type = Column(
         Enum(RoomType), 
         nullable = False
     )
     
-    room_id = Column(Integer, primary_key=True, autoincrement=True)
 
 
     capacity = Column(

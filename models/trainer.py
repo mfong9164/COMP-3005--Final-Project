@@ -12,7 +12,7 @@ from sqlalchemy.orm import relationship
 
 class Trainer(Base):
     __tablename__ = "Trainer"
-    email = Column(String(255), primary_key=True)
+    trainer_email = Column(String(255), primary_key=True)
     name = Column(String(100), nullable=False)
     gender = Column(Enum(Gender), nullable=False)
     

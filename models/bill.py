@@ -6,7 +6,7 @@ parent_dir = Path(__file__).parent.parent
 sys.path.insert(0, str(parent_dir))
 
 from app.base import Base
-from sqlalchemy import Column, Integer, String, ForeignKey, Float, Enum, Boolean, CheckConstraint
+from sqlalchemy import Column, Integer, String, ForeignKey, Float, Enum, Boolean, CheckConstraint, Date
 from models.enums import PaymentMethod
 from sqlalchemy.orm import relationship
 
@@ -50,6 +50,8 @@ class Bill(Base):
         nullable=False,
         default=False
     )
+
+    paid_date = Column(Date, nullable=True)
     
     # Many bills can belong to one member
     member = relationship("Member", back_populates="bills")
