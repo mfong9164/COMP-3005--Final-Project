@@ -13,8 +13,8 @@ from sqlalchemy.orm import relationship
 
 class Equipment(Base):
     __tablename__ = "Equipment"
-    equipment_id = Column(Integer, primary_key=True)
-    name = Column(String, nullable=False)
+    equipment_id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String(100), nullable=False)
     room_id = Column(Integer, ForeignKey("Room.room_id"), nullable = False)
     status = Column(Enum(EquipmentStatus), nullable=False, default=EquipmentStatus.IN_SERVICE)
 

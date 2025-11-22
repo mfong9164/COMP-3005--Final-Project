@@ -11,9 +11,14 @@ from sqlalchemy.orm import relationship
 
 class HealthMetric(Base):
     __tablename__ = 'HealthMetric'
+    __table_args__ = (
+        CheckConstraint('height > 0', name='check_height_positive'),
+        CheckConstraint('weight > 0', name='check_weight_positive'),
+        CheckConstraint('heart_rate > 0 AND heart_rate <= 300', name='check_heart_rate_valid'),
+    )
 
     member_email = Column(
-        String,
+        String(255),
         ForeignKey("Member.email"), 
         primary_key=True
     )

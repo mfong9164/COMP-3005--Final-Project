@@ -6,27 +6,31 @@ parent_dir = Path(__file__).parent.parent
 sys.path.insert(0, str(parent_dir))
 
 from app.base import Base
-from sqlalchemy import Column, Integer, String, ForeignKey, Float, Enum, Boolean
+from sqlalchemy import Column, Integer, String, ForeignKey, Float, Enum, Boolean, CheckConstraint
 from models.enums import PaymentMethod
 from sqlalchemy.orm import relationship
 
 
 class Bill(Base):
     __tablename__ = 'Bill'
+    __table_args__ = (
+        CheckConstraint('amount_due >= 0', name='check_amount_non_negative'),
+    )
 
     id = Column(
         Integer, 
-        primary_key=True
+        primary_key=True,
+        autoincrement=True
     )
     
     member_email = Column(
-        String,
+        String(255),
         ForeignKey("Member.email"),
         nullable = False
     )
 
     admin_email = Column(
-        String,
+        String(255),
         ForeignKey("Admin.email"),
         nullable=False
     )

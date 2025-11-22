@@ -6,26 +6,30 @@ parent_dir = Path(__file__).parent.parent
 sys.path.insert(0, str(parent_dir))
 
 from app.base import Base
-from sqlalchemy import Column, Integer, String, ForeignKey, Float
+from sqlalchemy import Column, Integer, String, ForeignKey, Float, CheckConstraint
 from sqlalchemy.dialects.postgresql import TSRANGE
 from sqlalchemy.orm import relationship
 
 class PersonalTrainingSession(Base):
     __tablename__ = "PersonalTrainingSession"
+    __table_args__ = (
+        CheckConstraint('price >= 0', name='check_price_non_negative'),
+    )
 
     id = Column(
         Integer, 
-        primary_key=True
+        primary_key=True,
+        autoincrement=True
     )
 
     trainer_email = Column(
-        String,
+        String(255),
         ForeignKey("Trainer.email"),
         nullable=False
     )
 
     member_email = Column(
-        String,
+        String(255),
         ForeignKey("Member.email"),
         nullable=False
     )

@@ -11,10 +11,14 @@ from sqlalchemy.orm import relationship
 
 class Room(Base):
     __tablename__ = "Room"
-    room_id = Column(Integer, primary_key=True)
+    __table_args__ = (
+        CheckConstraint('capacity > 0', name='check_capacity_positive'),
+    )
+    
+    room_id = Column(Integer, primary_key=True, autoincrement=True)
 
     ## Change to ENUM for options
-    room_type = Column(String, nullable = False)
+    room_type = Column(String(50), nullable = False)
 
     capacity = Column(Integer, nullable = False) 
 
