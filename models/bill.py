@@ -10,7 +10,6 @@ from sqlalchemy import Column, Integer, String, ForeignKey, Float, Enum, Boolean
 from models.enums import PaymentMethod
 from sqlalchemy.orm import relationship
 
-
 class Bill(Base):
     __tablename__ = 'Bill'
 

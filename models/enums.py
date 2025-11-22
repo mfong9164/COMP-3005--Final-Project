@@ -20,6 +20,10 @@ class Gender(enum.Enum):
     FEMALE = 1
     OTHER = 2
 
+class RoomType(enum.Enum):
+    STUDIO = 0
+    TRAINING_ROOM = 1
+
 class EquipmentStatus(enum.Enum):
     IN_SERVICE = 0
     OUT_OF_SERVICE = 1

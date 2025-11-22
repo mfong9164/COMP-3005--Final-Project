@@ -8,15 +8,24 @@ sys.path.insert(0, str(parent_dir))
 from app.base import Base
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
+from models.enums import RoomType
 
 class Room(Base):
     __tablename__ = "Room"
-    room_id = Column(Integer, primary_key=True)
+    room_id = Column(
+        Integer, 
+        primary_key=True
+    )
 
-    ## Change to ENUM for options
-    room_type = Column(String, nullable = False)
+    room_type = Column(
+        Enum(RoomType), 
+        nullable = False
+    )
 
-    capacity = Column(Integer, nullable = False) 
+    capacity = Column(
+        Integer, 
+        nullable = False
+    ) 
 
     # One room can contain many equipment items
     equipment_items = relationship("Equipment", back_populates="room")
