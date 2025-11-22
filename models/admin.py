@@ -13,12 +13,12 @@ class Admin(Base):
     __tablename__ = "Admin"
 
     email = Column(
-        String, 
+        String(255), 
         primary_key=True
     
     )
     name = Column(
-        String, 
+        String(100), 
         nullable=False
     )
 

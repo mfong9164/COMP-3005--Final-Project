@@ -34,6 +34,9 @@ class MaintenanceTicket(Base):
         nullable = False
     )
 
+    ## True for completed, false for not completed
+    completed = Column(Boolean, nullable = False, default = False) 
+
     # Many tickets can be created by one admin
     admin = relationship("Admin", back_populates="maintenance_tickets")
 

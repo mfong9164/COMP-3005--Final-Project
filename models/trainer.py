@@ -12,8 +12,8 @@ from sqlalchemy.orm import relationship
 
 class Trainer(Base):
     __tablename__ = "Trainer"
-    email = Column(String, primary_key=True)
-    name = Column(String, nullable=False)
+    email = Column(String(255), primary_key=True)
+    name = Column(String(100), nullable=False)
     gender = Column(Enum(Gender), nullable=False)
     
     # One trainer can have many personal training sessions
