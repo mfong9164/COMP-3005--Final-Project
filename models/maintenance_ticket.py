@@ -11,28 +11,12 @@ from sqlalchemy.orm import relationship
 
 class MaintenanceTicket(Base):
     __tablename__ = "MaintenanceTicket"
-
-    id = Column(
-        Integer, 
-        primary_key=True
-    )
-
-    admin_email = Column(
-        String, 
-        ForeignKey("Admin.email"), 
-        nullable=False
-    )
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    admin_email = Column(String(255), ForeignKey("Admin.email"), nullable=False)
+    equipment_id = Column(Integer, ForeignKey("Equipment.equipment_id"), nullable = False)
     
-    equipment_id = Column(
-        Integer, 
-        ForeignKey("Equipment.equipment_id"), 
-        nullable = False
-    )
-
-    description = Column(
-        Text, 
-        nullable = False
-    )
+    
+    description = Column(Text, nullable = False)
 
     ## True for completed, false for not completed
     completed = Column(Boolean, nullable = False, default = False) 

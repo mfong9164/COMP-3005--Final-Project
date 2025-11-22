@@ -12,7 +12,7 @@ from sqlalchemy.orm import relationship
 class ParticipatesIn(Base):
     __tablename__ = "ParticipatesIn"
     member_email = Column(String(255), ForeignKey("Member.email"), primary_key=True)
-    class_id = Column(Integer, ForeignKey("GroupFitnessClass.id"), primary_key=True, index = True)
+    class_id = Column(Integer, ForeignKey("GroupFitnessClass.id"), primary_key=True, index=True)
 
     # Many participation records belong to one member
     member = relationship("Member", back_populates="participations")
