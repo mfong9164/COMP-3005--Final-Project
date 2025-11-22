@@ -1,7 +1,8 @@
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, select
 from sqlalchemy.orm import Session
 import sys
 from pathlib import Path
+from getpass import getpass
 
 # Add parent directory to path
 parent_dir = Path(__file__).parent.parent
@@ -26,7 +27,6 @@ from models.participates_in import ParticipatesIn
 
 
 DB_USER = 'postgres'
-DB_PASSWORD = '1234'
 DB_HOST = 'localhost'
 DB_PORT = '5432'
 DB_NAME = 'Health and Fitness Club Management System'
@@ -34,6 +34,7 @@ DB_NAME = 'Health and Fitness Club Management System'
 
 def create_connection():
     try:
+        DB_PASSWORD = getpass("DB Password: ")
         engine = create_engine(f"postgresql+psycopg2://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}")
         with engine.connect() as conn:
             print("Connected")
@@ -41,11 +42,16 @@ def create_connection():
             Base.metadata.create_all(engine, checkfirst=True)
     except Exception as e:
         print(f"Failed: {e}")
-        return
+        quit()
 
     with Session(engine) as session:
-        pass
+        User_email = input("User Email: ")
+        if (session.execute(select(Member).where(Member.email == User_email)) is None):
+            print("member login")
 
 if __name__ == '__main__':
     create_connection()
+    
+
+
     
