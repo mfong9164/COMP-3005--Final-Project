@@ -12,15 +12,17 @@ from models.enums import RoomType
 
 class Room(Base):
     __tablename__ = "Room"
-    room_id = Column(
-        Integer, 
-        primary_key=True
+    __table_args__ = (
+        CheckConstraint('capacity > 0', name='check_capacity_positive'),
     )
 
     room_type = Column(
         Enum(RoomType), 
         nullable = False
     )
+    
+    room_id = Column(Integer, primary_key=True, autoincrement=True)
+
 
     capacity = Column(
         Integer, 
@@ -31,10 +33,7 @@ class Room(Base):
     equipment_items = relationship("Equipment", back_populates="room")
 
     # One room can host many personal training sessions
-    personal_training_sessions = relationship(
-        "PersonalTrainingSession",
-        back_populates="room",
-    )
+    personal_training_sessions = relationship("PersonalTrainingSession", back_populates="room")
 
     # One room can host many group fitness classes
     group_fitness_classes = relationship("GroupFitnessClass", back_populates="room")
