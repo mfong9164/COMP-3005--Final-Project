@@ -46,7 +46,7 @@ def create_connection():
 
     with Session(engine) as session:
         User_email = input("User Email: ")
-        if (session.execute(select(Member).where(Member.email == User_email)) is None):
+        if (session.execute(select(Member.email).where(Member.email == User_email)) == User_email):
             print("member login")
 
 if __name__ == '__main__':
