@@ -66,31 +66,75 @@ def member_login(engine):
 
 def member_dashboard(engine, member_email):
     # member dashboard
+    
     while True:
 
+        with Session(engine) as session:
+            try:
+                member = session.query(Member).filter_by(email=member_email).first()            
+            except Exception as e:
+                print(f"Error: {e}")
+        
         ## add more if needed
-        print("\n=== Member Dashboard ===")
-        print("1. Update Personal Details")
-        print("2. Update Health History")
-        print("3. Update Fitness Goals")
-        print("4. Logout")
+        print(f"\n=== {member.name} Dashboard ===")
+        print("1. View Personal Details")
+        print("2. Update Personal Details")
+        print("3. Update Health History")
+        print("4. Update Fitness Goals")
+        print("5. Logout")
         
         choice = input("Select option: ")
-        
+
         if choice == "1":
-            update_member_profile(engine, member_email)
-        elif choice == "2":
-            log_member_health_metrics(engine, member_email)
-        elif choice == "3":
+            # TODO: Liam's Member Dashboard Function
             pass
+        
+        elif choice == "2":
+            update_member_profile(engine, member_email)
+
+        elif choice == "3":
+            log_member_health_metrics(engine, member_email)
+
         elif choice == "4":
+            pass
+
+        elif choice == "5":
             print("Logged out. Returning to Member Menu...")
             break  # Goes back to member_menu
+
         else:
             print("Invalid option. Please try again.")
 
 def update_member_profile(engine, member_email):
-    pass
+    with Session(engine) as session:
+        member = session.query(Member).filter_by(email=member_email).first()
+
+        if member:
+
+            print(f"\nCurrent Email: {member.email}")
+            new_email = input("Enter new email (or press Enter to skip): ")
+            if new_email:
+                member.email = new_email
+            
+            print(f"\nCurrent Name: {member.name}")
+            new_name = input("Enter new name (or press Enter to skip): ")
+            if new_name:
+                member.name = new_name
+
+            print(f"\nCurrent Gender: {member.gender}")
+            new_gender = input("Enter new gender (MALE/FEMALE) (or press Enter to skip): ")
+            if new_gender:
+                member.gender = new_gender
+
+            print(f"\nCurrent Phone: {member.phone_number}")
+            new_phone = input("Enter new phone (or press Enter to skip): ")
+            if new_phone:
+                member.phone_number = new_phone
+            
+            session.commit()
+
+            print("Profile updated successfully!")
+        input("\nPress Enter to continue...")
 
 def log_member_health_metrics(engine, member_email):
     pass

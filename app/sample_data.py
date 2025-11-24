@@ -84,31 +84,31 @@ def memberSample():
             name="Nancy Williams",
             date_of_birth=date(1975, 2, 11),
             gender=Gender.FEMALE,
-            phone_number="(538) 633-9149"
+            phone_number="5386339149"
         ), Member (
             email="LauraJackson@hotmail.com",
-            name="Laura	Jackson",
+            name="Laura Jackson",
             date_of_birth=date(1975, 3, 12),
             gender=Gender.FEMALE,
-            phone_number="(245) 375-1180"
+            phone_number="2453751180"
         ), Member (
             email="RobertLewis@hotmail.com",
             name="Robert Lewis",
             date_of_birth=date(1975, 4, 13),
             gender=Gender.MALE,
-            phone_number="(675) 893-9155"
+            phone_number="6758939155"
         ), Member (
             email="PaulHill@hotmail.com",
             name="Paul Hill",
             date_of_birth=date(1975, 5, 14),
             gender=Gender.MALE,
-            phone_number="(256) 975-2330"
+            phone_number="2569752330"
         ), Member (
             email="KevinRoberts@hotmail.com",
             name="Kevin Roberts",
             date_of_birth=date(1975, 6, 14),
             gender=Gender.MALE,
-            phone_number="(676) 365-1789"
+            phone_number="6763651789"
         )
     ]
 def roomSample():

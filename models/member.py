@@ -16,7 +16,7 @@ class Member(Base):
     name = Column(String(100), nullable=False)
     date_of_birth = Column(Date, nullable=False)
     gender = Column(Enum(Gender), nullable=False)
-    phone_number = Column(String(20), nullable=False)
+    phone_number = Column(String(10), nullable=False)
 
     # One member can have many bills
     bills = relationship("Bill", back_populates = "member")
