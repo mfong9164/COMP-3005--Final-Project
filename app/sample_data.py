@@ -56,23 +56,23 @@ def adminSample():
 def trainerSample():
     return [
         Trainer (
-            trainer_email="MichelleJohnson@gmail.com",
+            email="MichelleJohnson@gmail.com",
             name="Michelle Johnson",
             gender=Gender.FEMALE
         ), Trainer (
-            trainer_email="JohnThomas@gmail.com",
+            email="JohnThomas@gmail.com",
             name="John Thomas",
             gender=Gender.MALE
         ), Trainer (
-            trainer_email="DanielRodriguez@gmail.com",
+            email="DanielRodriguez@gmail.com",
             name="Daniel Rodriguez",
             gender=Gender.MALE
         ), Trainer (
-            trainer_email="AnthonyLopez@gmail.com",
+            email="AnthonyLopez@gmail.com",
             name="Anthony Lopez",
             gender=Gender.MALE
         ), Trainer (
-            trainer_email="PatriciaPerez@gmail.com",
+            email="PatriciaPerez@gmail.com",
             name="Patricia Perez",
             gender=Gender.FEMALE
         )

@@ -1,33 +1,9 @@
 from sqlalchemy.orm import Session
-from sqlalchemy import select
 from models.member import Member
-from models.trainer import Trainer
-from models.admin import Admin
-from models.health_metric import HealthMetric
 from models.fitness_goal import FitnessGoal
 from models.enums import GoalType
 from operator import attrgetter
-
-def main_menu(engine):
-    # main menu to select user role
-    while True:
-        print("\n=== Health & Fitness Club Management System ===")
-        print("1. Member")
-        print("2. Trainer")
-        print("3. Admin")
-        print("4. Exit")
-        
-        choice = input("Select option: ")
-        
-        if choice == "1":
-            member_menu(engine)
-        elif choice == "2":
-            trainer_menu(engine)
-        elif choice == "3":
-            admin_menu(engine)
-        elif choice == "4":
-            break
-
+from models.health_metric import HealthMetric
 
 def member_menu(engine):
 
@@ -67,6 +43,9 @@ def member_login(engine):
             
         except Exception as e:
             print(f"Error: {e}")
+
+def member_registration(engine):
+    pass
 
 def member_dashboard(engine, member_email):
     # member dashboard
@@ -229,11 +208,3 @@ def update_member_fitness_goals(engine, member_email):
 
     except ValueError:
         print("Invalid input.")
-
-def trainer_menu(engine):
-    # trainer UI code here
-    pass
-
-def admin_menu(engine):
-    # admin UI code here
-    pass

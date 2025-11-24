@@ -28,8 +28,9 @@ from app.sample_data import getSampleData
 from models.paid_date_trigger import create_paid_date_trigger
 from models.unpaid_bills_view import create_unpaid_bills_view, drop_unpaid_bills_view
 
-from ui import main_menu
-
+from app.member_func import member_menu
+from app.trainer_func import login as trainer_menu
+from app.admin_func import login as admin_menu
 
 DB_USER = 'postgres'
 DB_HOST = 'localhost'
@@ -73,6 +74,28 @@ def create_connection():
             quit()
     
     return engine
+
+def main_menu(engine):
+    # main menu to select user role
+    while True:
+        print("\n=== Health & Fitness Club Management System ===")
+        print("1. Member")
+        print("2. Trainer")
+        print("3. Admin")
+        print("4. Exit")
+        
+        choice = input("Select option: ")
+        
+        if choice == "1":
+            member_menu(engine)
+        elif choice == "2":
+            trainer_menu(engine)
+        elif choice == "3":
+            admin_menu(engine)
+        elif choice == "4":
+            break
+        else:
+            print("Invalid option. Please try again.")
 
 if __name__ == '__main__':
     engine = create_connection()
