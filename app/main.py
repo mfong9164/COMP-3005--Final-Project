@@ -24,7 +24,7 @@ from models.trainer import Trainer
 from models.equipment import Equipment
 from models.maintenance_ticket import MaintenanceTicket
 from models.participates_in import ParticipatesIn
-# from app.sample_data import getSampleData
+from app.sample_data import getSampleData
 from models.paid_date_trigger import create_paid_date_trigger
 from models.unpaid_bills_view import create_unpaid_bills_view, drop_unpaid_bills_view
 
@@ -63,8 +63,8 @@ def create_connection():
     with Session(engine) as session:
         try:
             pass
-            # sample_data = getSampleData()
-            # session.add_all(sample_data)
+            sample_data = getSampleData()
+            session.add_all(sample_data)
             # User_email = input("User Email: ")
             # if (session.execute(select(Member.email).where(Member.email == User_email)) == User_email):
             #     print("member login")

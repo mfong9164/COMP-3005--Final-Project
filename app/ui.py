@@ -87,9 +87,11 @@ def member_dashboard(engine, member_email):
         else:
             print("Invalid option. Please try again.")
 
-def update_member_profile():
+def update_member_profile(engine, member_email):
     pass
 
+def log_member_health_metrics(engine, member_email):
+    pass
 
 def trainer_menu(engine):
     # trainer UI code here
