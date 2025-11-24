@@ -3,6 +3,10 @@ from sqlalchemy import select
 from models.member import Member
 from models.trainer import Trainer
 from models.admin import Admin
+from models.health_metric import HealthMetric
+from models.fitness_goal import FitnessGoal
+from models.enums import GoalType
+from operator import attrgetter
 
 def main_menu(engine):
     # main menu to select user role
@@ -79,9 +83,11 @@ def member_dashboard(engine, member_email):
         print(f"\n=== {member.name} Dashboard ===")
         print("1. View Personal Details")
         print("2. Update Personal Details")
-        print("3. Update Health History")
-        print("4. Update Fitness Goals")
-        print("5. Logout")
+        print("3. View Health Metrics")
+        print("4. Update Health Metrics")
+        print("5. View Fitness Goals")
+        print("6. Update Fitness Goals")
+        print("7. Logout")
         
         choice = input("Select option: ")
 
@@ -93,13 +99,19 @@ def member_dashboard(engine, member_email):
             update_member_profile(engine, member_email)
 
         elif choice == "3":
-            log_member_health_metrics(engine, member_email)
+            view_member_health_metrics(engine, member_email)
 
         elif choice == "4":
-            pass
-
+            update_member_health_metrics(engine, member_email)
+        
         elif choice == "5":
-            print("Logged out. Returning to Member Menu...")
+            view_member_fitness_goals(engine, member_email)
+        
+        elif choice == "6":
+            update_member_fitness_goals(engine, member_email)
+
+        elif choice == "7":
+            print("Logged out. Returning to Member Menu.")
             break  # Goes back to member_menu
 
         else:
@@ -110,7 +122,6 @@ def update_member_profile(engine, member_email):
         member = session.query(Member).filter_by(email=member_email).first()
 
         if member:
-
             print(f"\nCurrent Email: {member.email}")
             new_email = input("Enter new email (or press Enter to skip): ")
             if new_email:
@@ -134,10 +145,90 @@ def update_member_profile(engine, member_email):
             session.commit()
 
             print("Profile updated successfully!")
-        input("\nPress Enter to continue...")
 
-def log_member_health_metrics(engine, member_email):
-    pass
+def update_member_health_metrics(engine, member_email):
+    try:
+        height = float(input("Enter height (cm): "))
+        weight = float(input("Enter weight (kg): "))
+        heart_rate = int(input("Enter heart rate (bpm): "))
+        
+        with Session(engine) as session:
+            new_metric = HealthMetric(
+                member_email=member_email,
+                height=height,
+                weight=weight,
+                heart_rate=heart_rate
+            )
+            session.add(new_metric)
+            session.commit()
+            print("Health metric added successfully!")
+
+    except ValueError:
+        print("Invalid input. Please enter numbers.")
+
+    except Exception as e:
+        print(f"Error: {e}")
+
+def view_member_health_metrics(engine, member_email):
+    with Session(engine) as session:
+        member = session.query(Member).filter_by(email=member_email).first()
+
+        if member:
+            metrics = member.health_metrics
+            if metrics:
+                print(f"\n--- {member.name} Health Metrics ---")
+
+                # sorts from newest to oldest metrics for a user. this function sorts a list of objects by an attribute
+                for metric in sorted(metrics, key=attrgetter('created'), reverse=True):
+                    print(f"\nDate: {metric.created}")
+                    print(f"Height: {metric.height} cm")
+                    print(f"Weight: {metric.weight} kg")
+                    print(f"Heart Rate: {metric.heart_rate} bpm")
+            else:
+                print("No health metrics found.")
+
+
+def view_member_fitness_goals(engine, member_email):
+    with Session(engine) as session:
+        member = session.query(Member).filter_by(email=member_email).first()
+
+        if member:
+            fitness_goals = member.fitness_goals
+            if fitness_goals:
+                print(f"\n--- {member.name} Fitness Goals ---")
+
+                # sorts from newest to oldest fitness_goals for a user. this function sorts a list of objects by an attribute
+                for goal in fitness_goals:
+                    print(f"{goal.goal_type}: {goal.amount}")
+            else:
+                print("No fitness goals found.")
+
+def update_member_fitness_goals(engine, member_email):
+    try:
+        print("\n1. Weight")
+        print("2. Body Fat Percentage")
+        print("3. Cardio")
+        goal_type = int(input("Choose a Goal Type to enter: "))
+
+        with Session(engine) as session:
+            if goal_type == 1:
+                amount = int(input("Enter weight goal: "))
+                new_goal = FitnessGoal(member_email=member_email, goal_type=GoalType.WEIGHT, amount=amount)
+            if goal_type == 2:
+                amount = int(input("Enter body fat % goal: "))
+                new_goal = FitnessGoal(member_email=member_email, goal_type=GoalType.BODY_FAT_PERCENTAGE, amount=amount)
+            if goal_type == 3:
+                amount = int(input("Enter cardio time goal: "))
+                new_goal = FitnessGoal(member_email=member_email, goal_type=GoalType.CARDIO, amount=amount)
+            else:
+                print("Invalid option.")
+
+            session.add(new_goal)
+            session.commit()
+            print("Fitness goal added successfully!")
+
+    except ValueError:
+        print("Invalid input.")
 
 def trainer_menu(engine):
     # trainer UI code here
