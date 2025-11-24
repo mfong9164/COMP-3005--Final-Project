@@ -60,7 +60,7 @@ def trainerSample():
             name="Michelle Johnson",
             gender=Gender.FEMALE
         ), Trainer (
-            trainer_emaill="JohnThomas@gmail.com",
+            trainer_email="JohnThomas@gmail.com",
             name="John Thomas",
             gender=Gender.MALE
         ), Trainer (

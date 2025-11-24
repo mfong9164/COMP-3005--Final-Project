@@ -82,6 +82,8 @@ def member_dashboard(engine, member_email):
         elif choice == "2":
             log_member_health_metrics(engine, member_email)
         elif choice == "3":
+            pass
+        elif choice == "4":
             print("Logged out. Returning to Member Menu...")
             break  # Goes back to member_menu
         else:

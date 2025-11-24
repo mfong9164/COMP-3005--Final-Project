@@ -55,6 +55,7 @@ def create_connection():
 
             # create the view after tables are created
             create_unpaid_bills_view(engine)
+            
 
     except Exception as e:
         print(f"Failed: {e}")
@@ -65,9 +66,8 @@ def create_connection():
             pass
             sample_data = getSampleData()
             session.add_all(sample_data)
-            # User_email = input("User Email: ")
-            # if (session.execute(select(Member.email).where(Member.email == User_email)) == User_email):
-            #     print("member login")
+            session.commit()
+            
         except Exception as e:
             print(f"Failed: {e}")
             quit()
