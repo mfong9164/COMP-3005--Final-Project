@@ -45,11 +45,10 @@ def member_login(engine):
             print(f"Error: {e}")
 
 def member_registration(engine):
+    # TODO: Liam's Member Registration Function
     pass
 
 def member_dashboard(engine, member_email):
-    # member dashboard
-    
     while True:
 
         with Session(engine) as session:
@@ -63,10 +62,11 @@ def member_dashboard(engine, member_email):
         print("1. View Personal Details")
         print("2. Update Personal Details")
         print("3. View Health Metrics")
-        print("4. Update Health Metrics")
+        print("4. Add Health Metric")
         print("5. View Fitness Goals")
-        print("6. Update Fitness Goals")
-        print("7. Logout")
+        print("6. Add Fitness Goal")
+        print("7. Group Class Registration")
+        print("8. Logout")
         
         choice = input("Select option: ")
 
@@ -81,17 +81,21 @@ def member_dashboard(engine, member_email):
             view_member_health_metrics(engine, member_email)
 
         elif choice == "4":
-            update_member_health_metrics(engine, member_email)
+            add_new_member_health_metrics(engine, member_email)
         
         elif choice == "5":
             view_member_fitness_goals(engine, member_email)
         
         elif choice == "6":
-            update_member_fitness_goals(engine, member_email)
-
+            add_new_member_fitness_goals(engine, member_email)
+        
         elif choice == "7":
+            # TODO: Liam's class registration function
+            pass
+
+        elif choice == "8":
             print("Logged out. Returning to Member Menu.")
-            break  # Goes back to member_menu
+            break  # goes back to member_menu
 
         else:
             print("Invalid option. Please try again.")
@@ -110,26 +114,41 @@ def update_member_profile(engine, member_email):
             new_name = input("Enter new name (or press Enter to skip): ")
             if new_name:
                 member.name = new_name
+            
 
-            print(f"\nCurrent Gender: {member.gender}")
-            new_gender = input("Enter new gender (MALE/FEMALE) (or press Enter to skip): ")
+            member_gender_string = str(member.gender)
+            member_gender_result = member_gender_string.split('.')[-1]
+            print(f"\nCurrent Gender: {member_gender_result}")
+            new_gender = input("Enter new gender (MALE/FEMALE/OTHER) (or press Enter to skip): ")
             if new_gender:
-                member.gender = new_gender
+                if new_gender.upper() != "MALE" and new_gender.upper() != "FEMALE" and new_gender.upper() != "OTHER":
+                    print("Invalid gender. Please enter MALE, FEMALE, or OTHER.")
+                    return
+                member.gender = new_gender.upper()
+            
 
             print(f"\nCurrent Phone: {member.phone_number}")
             new_phone = input("Enter new phone (or press Enter to skip): ")
             if new_phone:
+                if len(new_phone) != 10 or not new_phone.isdigit():
+                    print("Invalid phone number. Please enter a 10 digit phone number.")
+                    return
+
                 member.phone_number = new_phone
             
             session.commit()
 
             print("Profile updated successfully!")
 
-def update_member_health_metrics(engine, member_email):
+def add_new_member_health_metrics(engine, member_email):
     try:
         height = float(input("Enter height (cm): "))
         weight = float(input("Enter weight (kg): "))
         heart_rate = int(input("Enter heart rate (bpm): "))
+        
+        if height <= 0 or weight <= 0 or heart_rate <= 0 or heart_rate > 300:
+            print("Invalid input. Please enter valid values.")
+            return
         
         with Session(engine) as session:
             new_metric = HealthMetric(
@@ -178,11 +197,16 @@ def view_member_fitness_goals(engine, member_email):
 
                 # sorts from newest to oldest fitness_goals for a user. this function sorts a list of objects by an attribute
                 for goal in fitness_goals:
-                    print(f"{goal.goal_type}: {goal.amount}")
+
+                    # by default, the goal_type is an enum object. we need to convert it to a string.
+                    goal_type_string = str(goal.goal_type)
+                    goal_type_result = goal_type_string.split('.')[-1]
+
+                    print(f"{goal_type_result} Goal: {goal.amount}")
             else:
                 print("No fitness goals found.")
 
-def update_member_fitness_goals(engine, member_email):
+def add_new_member_fitness_goals(engine, member_email):
     try:
         print("\n1. Weight")
         print("2. Body Fat Percentage")
@@ -201,6 +225,7 @@ def update_member_fitness_goals(engine, member_email):
                 new_goal = FitnessGoal(member_email=member_email, goal_type=GoalType.CARDIO, amount=amount)
             else:
                 print("Invalid option.")
+                return
 
             session.add(new_goal)
             session.commit()
@@ -208,3 +233,6 @@ def update_member_fitness_goals(engine, member_email):
 
     except ValueError:
         print("Invalid input.")
+    
+    except Exception as e:
+        print(f"Error: {e}")
