@@ -64,7 +64,7 @@ def member_dashboard(engine, member_email):
         print("3. View Health Metrics")
         print("4. Add Health Metric")
         print("5. View Fitness Goals")
-        print("6. Add Fitness Goal")
+        print("6. Update Fitness Goals")
         print("7. Group Class Registration")
         print("8. Logout")
         
@@ -87,7 +87,7 @@ def member_dashboard(engine, member_email):
             view_member_fitness_goals(engine, member_email)
         
         elif choice == "6":
-            add_new_member_fitness_goals(engine, member_email)
+            update_member_fitness_goals(engine, member_email)
         
         elif choice == "7":
             # TODO: Liam's class registration function
@@ -174,10 +174,10 @@ def view_member_health_metrics(engine, member_email):
         if member:
             metrics = member.health_metrics
             if metrics:
-                print(f"\n--- {member.name} Health Metrics ---")
+                print(f"\n--- {member.name} Latest Health Metrics ---")
 
-                # sorts from newest to oldest metrics for a user. this function sorts a list of objects by an attribute
-                for metric in sorted(metrics, key=attrgetter('created'), reverse=True):
+                # Sort from newest to oldest and get only the latest 5
+                for metric in sorted(metrics, key=attrgetter('created'), reverse=True)[:5]:
                     print(f"\nDate: {metric.created}")
                     print(f"Height: {metric.height} cm")
                     print(f"Weight: {metric.weight} kg")
@@ -192,44 +192,69 @@ def view_member_fitness_goals(engine, member_email):
 
         if member:
             fitness_goals = member.fitness_goals
-            if fitness_goals:
-                print(f"\n--- {member.name} Fitness Goals ---")
-
-                # sorts from newest to oldest fitness_goals for a user. this function sorts a list of objects by an attribute
-                for goal in fitness_goals:
-
-                    # by default, the goal_type is an enum object. we need to convert it to a string.
-                    goal_type_string = str(goal.goal_type)
-                    goal_type_result = goal_type_string.split('.')[-1]
-
-                    print(f"{goal_type_result} Goal: {goal.amount}")
+            
+            # create a dictionary to map goal_type to amount to lookup if a goal exists/set
+            goals_dict = {}
+            for goal in fitness_goals:
+                goals_dict[goal.goal_type] = goal.amount
+            
+            print(f"\n--- {member.name} Fitness Goals ---")
+            
+            if GoalType.WEIGHT in goals_dict:
+                print(f"Weight Goal: {goals_dict[GoalType.WEIGHT]} kg")
             else:
-                print("No fitness goals found.")
+                print(f"Weight Goal: N/A")
+            
+            if GoalType.BODY_FAT_PERCENTAGE in goals_dict:
+                print(f"Body Fat Percentage Goal: {goals_dict[GoalType.BODY_FAT_PERCENTAGE]}%")
+            else:
+                print(f"Body Fat Percentage Goal: N/A")
+            
+            if GoalType.CARDIO in goals_dict:
+                print(f"Cardio Goal: {goals_dict[GoalType.CARDIO]} minutes")
+            else:
+                print(f"Cardio Goal: N/A")
 
-def add_new_member_fitness_goals(engine, member_email):
+
+def update_member_fitness_goals(engine, member_email):
     try:
-        print("\n1. Weight")
-        print("2. Body Fat Percentage")
-        print("3. Cardio")
+        print("\n1. Weight Target")
+        print("2. Body Fat Percentage Target")
+        print("3. Cardio Target")
         goal_type = int(input("Choose a Goal Type to enter: "))
 
         with Session(engine) as session:
+            goal_type_enum = None
+            amount = None
+            
             if goal_type == 1:
-                amount = int(input("Enter weight goal: "))
-                new_goal = FitnessGoal(member_email=member_email, goal_type=GoalType.WEIGHT, amount=amount)
-            if goal_type == 2:
+                goal_type_enum = GoalType.WEIGHT
+                amount = int(input("Enter weight goal (kg): "))
+            elif goal_type == 2:
+                goal_type_enum = GoalType.BODY_FAT_PERCENTAGE
                 amount = int(input("Enter body fat % goal: "))
-                new_goal = FitnessGoal(member_email=member_email, goal_type=GoalType.BODY_FAT_PERCENTAGE, amount=amount)
-            if goal_type == 3:
+            elif goal_type == 3:
+                goal_type_enum = GoalType.CARDIO
                 amount = int(input("Enter cardio time goal: "))
-                new_goal = FitnessGoal(member_email=member_email, goal_type=GoalType.CARDIO, amount=amount)
             else:
                 print("Invalid option.")
                 return
 
-            session.add(new_goal)
+            # check if goal already exists since a member can only have one goal of each type
+            existing_goal = session.query(FitnessGoal).filter_by(member_email=member_email, goal_type=goal_type_enum).first()
+
+            if existing_goal:
+                # update existing goal
+                existing_goal.amount = amount
+                print(f"Fitness goal updated successfully!")
+            else:
+                # create the new goal
+                new_goal = FitnessGoal(member_email=member_email, goal_type=goal_type_enum, amount=amount)
+
+                session.add(new_goal)
+                print(f"Fitness goal added successfully!")
+            
             session.commit()
-            print("Fitness goal added successfully!")
 
     except ValueError:
         print("Invalid input.")
