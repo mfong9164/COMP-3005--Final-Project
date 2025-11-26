@@ -14,7 +14,7 @@ from sqlalchemy.orm import relationship
 class FitnessGoal(Base):
     __tablename__ = "FitnessGoal"
     __table_args__ = (
-        CheckConstraint('amount >= 0 AND amount <= 100', name='check_amount_non_negative'),
+        CheckConstraint('amount >= 0', name='check_amount_non_negative'),
     )
 
     member_email = Column(
