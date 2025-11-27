@@ -147,7 +147,7 @@ def equipmentSample():
         ), Equipment (
             name="Treadmill",
             room_id=1,
-            status=EquipmentStatus.OUT_OF_SERVICE
+            status=EquipmentStatus.IN_SERVICE
         ), Equipment (
             name="Mat",
             room_id=2,
