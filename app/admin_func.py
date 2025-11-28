@@ -3,16 +3,20 @@ from models.admin import Admin
 from models.maintenance_ticket import MaintenanceTicket
 from models.equipment import Equipment
 from models.enums import EquipmentStatus
+from models.enums import PaymentMethod
+from models.bill import Bill
+from models.group_fitness_bill import GroupFitnessBill
+from models.group_fitness_class import GroupFitnessClass
+from models.member import Member
+from models.participates_in import ParticipatesIn
 
 MENU = """
 === Admin Dashboard ===
 1. Room Booking
-2. Log Maintenance Ticket
-3. View Maintenance Tickets
-4. Update Maintenance Ticket Status
-5. Class Management
-6. Billing & Payment
-7. Logout
+2. Manage Maintenance Tickets
+3. Class Management
+4. Billing & Payment
+5. Logout
 """
 
 def login(engine):
@@ -38,22 +42,44 @@ def menu(engine, admin):
         if choice == '1':
             bookRoom(engine, admin)
         elif choice == '2':
-            logMaintenanceTicket(engine, admin)
+            manageMaintenanceTickets(engine, admin)
         elif choice == '3':
-            viewMaintenanceTicket(engine, admin)
-        elif choice == '4':
-            updateMaintenanceTicketStatus(engine, admin)
-        elif choice == '5':
             manageClasses(engine, admin)
-        elif choice == '6':
+        elif choice == '4':
             manageBilling(engine, admin)
-        elif choice == '7':
+        elif choice == '5':
             break
         else:
             print("Invalid option. Please try again.")
 
 def bookRoom(engine, admin):
     pass
+
+def manageMaintenanceTickets(engine, admin):
+    while True:
+        print("\n=== Maintenance Tickets Management ===")
+        print("1. Log New Maintenance Ticket")
+        print("2. View Maintenance Tickets")
+        print("3. Update Maintenance Ticket Status")
+        print("4. Back to Admin Menu")
+        
+        choice = input("Select option: ")
+        
+        if choice == '1':
+           logMaintenanceTicket(engine, admin)
+        elif choice == '2':
+            viewMaintenanceTicket(engine, admin)
+        elif choice == '3':
+            updateMaintenanceTicketStatus(engine, admin)
+        elif choice == '4':
+            break
+        else:
+            print("Invalid option. Please try again.")
+
+
+
+
+
 
 def logMaintenanceTicket(engine, admin):
     try:
@@ -92,6 +118,11 @@ def logMaintenanceTicket(engine, admin):
             print(f"Error: {e}")
             session.rollback()
 
+
+
+
+
+
 def viewMaintenanceTicket(engine, admin):
     with Session(engine) as session:
         try:
@@ -113,6 +144,10 @@ def viewMaintenanceTicket(engine, admin):
                 
         except Exception as e:
             print(f"Error: {e}")
+
+
+
+
 
 def updateMaintenanceTicketStatus(engine, admin):
     try:
@@ -145,7 +180,7 @@ def updateMaintenanceTicketStatus(engine, admin):
             if mark_complete == 'y':
                 ticket.completed = True
                 
-                # Use the relationship to get equipment and all its tickets
+                # use the relationship to get equipment and all its tickets
                 equipment = ticket.equipment
                 all_tickets = equipment.maintenance_tickets
                 all_completed = all(t.completed for t in all_tickets)
@@ -165,8 +200,316 @@ def updateMaintenanceTicketStatus(engine, admin):
             print(f"Error: {e}")
             session.rollback()
 
+
+
+
+
+
 def manageClasses(engine, admin):
     pass
 
+
+
+
+
+
 def manageBilling(engine, admin):
-    pass
+    while True:
+        print("\n=== Billing & Payment Management ===")
+        print("1. Create New Bill")
+        print("2. View All Bills")
+        print("3. Add Items to Existing Bill")
+        print("4. View Unpaid Bills")
+        print("5. Back to Admin Menu")
+        
+        choice = input("Select option: ")
+        
+        if choice == '1':
+            createBill(engine, admin)
+        elif choice == '2':
+            viewAllBills(engine, admin)
+        elif choice == '3':
+            addItemsToBill(engine, admin)
+        elif choice == '4':
+            viewUnpaidBills(engine, admin)
+        elif choice == '5':
+            break
+        else:
+            print("Invalid option.")
+
+
+
+
+
+
+def createBill(engine, admin):
+    try:
+        member_email = input("Enter member email: ").strip()
+        
+        with Session(engine) as session:
+            # check if member exists
+            member = session.query(Member).filter_by(email=member_email).first()
+            if not member:
+                print(f"Member not found: {member_email}")
+                return
+            
+            # ask what to bill for
+            print("\nWhat type of bill?")
+            print("1. Membership Fee")
+            print("2. Group Fitness Class")
+            
+            bill_type = input("Enter choice (1 or 2): ").strip()
+            
+            # calculate the amount
+            total_amount = 0.0
+            
+            if bill_type == '1':
+                # for the membership fee, just enter the amount
+                amount = float(input("Enter membership fee amount: $"))
+                if amount < 0:
+                    print("Amount cannot be negative.")
+                    return
+                total_amount = amount
+                item_type = "membership"
+                
+            elif bill_type == '2':
+                # group fitness class bill
+                class_id = int(input("Enter group fitness class ID: "))
+                fitness_class = session.query(GroupFitnessClass).filter_by(id=class_id).first()
+                
+                if not fitness_class:
+                    print(f"Class ID {class_id} not found.")
+                    return
+                
+                # check if the member is enrolled using the relationship
+                # The index on class_id will help with this query
+                participation = session.query(ParticipatesIn).filter_by(member_email=member_email, class_id=class_id).first()
+                
+                if not participation:
+                    print("Member is not enrolled in this class.")
+                    return
+                
+                # check if already billed for that class using relationship
+                already_billed = any(gfb.bill.member_email == member_email for gfb in fitness_class.group_fitness_bills)
+                
+                if already_billed:
+                    print("This class is already billed for this member.")
+                    return
+                
+                total_amount = fitness_class.price
+                item_type = "class"
+                item_id = class_id
+                
+            else:
+                print("Invalid choice.")
+                return
+            
+            # create the bill
+            new_bill = Bill(member_email=member_email, admin_email=admin.email, amount_due=total_amount, payment_method=PaymentMethod.CASH, paid=False)
+            session.add(new_bill)
+            session.flush()  # this gets us the bill ID
+            
+            # link the bill to the groupFitnessBill to the bill 
+            if item_type == "class":
+                gf_bill = GroupFitnessBill(bill_id=new_bill.id, class_id=item_id)
+                session.add(gf_bill)
+            
+            session.commit()
+            print(f"\nBill created successfully!")
+            print(f"Bill ID: {new_bill.id}")
+            print(f"Amount: ${total_amount:.2f}")
+            print("Note: Member will select payment method when paying.")
+            
+    except ValueError:
+        print("Invalid input. Please enter valid numbers.")
+    except Exception as e:
+        print(f"Error: {e}")
+        if 'session' in locals():
+            session.rollback()
+
+
+
+
+
+def viewAllBills(engine, admin):
+    with Session(engine) as session:
+        try:
+            bills = session.query(Bill).order_by(Bill.id.desc()).all()
+            
+            if not bills:
+                print("No bills found.")
+                return
+            
+            print("\n=== All Bills ===")
+            
+            for bill in bills:
+                print(f"\n{'='*50}")
+                print(f"Bill ID: {bill.id}")
+                print(f"Member: {bill.member.name} ({bill.member_email})")
+                print(f"Amount: ${bill.amount_due:.2f}")
+                print(f"Payment Method: {bill.payment_method.name}")
+                
+                if bill.paid:
+                    print(f"Status: PAID")
+                    if bill.paid_date:
+                        print(f"Paid Date: {bill.paid_date}")
+                else:
+                    print(f"Status: UNPAID")
+                
+                # show what's on the bill (line items)
+                print("\nItems on this bill:")
+                
+                # calculate total from classes
+                classes_total = 0.0
+                if bill.group_fitness_bills:
+                    for gf_bill in bill.group_fitness_bills:
+                        class_obj = gf_bill.fitness_class
+                        classes_total += class_obj.price
+                        print(f"  - Group Fitness Class #{class_obj.id} - ${class_obj.price:.2f}")
+                
+                # calculate membership fee which is the difference between total and classes
+                membership_amount = bill.amount_due - classes_total
+                if membership_amount > 0:
+                    print(f"  - Membership Fee - ${membership_amount:.2f}")
+                    
+        except Exception as e:
+            print(f"Error: {e}")
+
+
+
+
+
+
+def addItemsToBill(engine, admin):
+    try:
+        bill_id = int(input("Enter bill ID to add items to: "))
+        
+        with Session(engine) as session:
+            # find the bill
+            bill = session.query(Bill).filter_by(id=bill_id).first()
+            
+            if not bill:
+                print(f"Bill ID {bill_id} not found.")
+                return
+            
+            # can't add to a paid bill
+            if bill.paid:
+                print("Cannot add items to a paid bill. Create a new bill instead.")
+                return
+            
+            # calculate current class total to check if membership fee already exists
+            classes_total = 0.0
+            if bill.group_fitness_bills:
+                for gf_bill in bill.group_fitness_bills:
+                    classes_total += gf_bill.fitness_class.price
+            
+            # check if membership fee already exists (if amount > class total)
+            has_membership = bill.amount_due > classes_total
+            
+            print(f"\nCurrent bill amount: ${bill.amount_due:.2f}")
+            
+            # show menu based on whether membership already exists
+            if has_membership:
+                print("\nThis bill already includes a membership fee.")
+                print("You can add:")
+                print("1. Group Fitness Class")
+                choice = input("Enter choice (1): ").strip()
+            else:
+                print("\nWhat would you like to add?")
+                print("1. Membership Fee")
+                print("2. Group Fitness Class")
+                choice = input("Enter choice (1 or 2): ").strip()
+            
+            if choice == '1':
+                if has_membership:
+                    print("This bill already has a membership fee. Adding a class instead...")
+                    choice = '2'  # switch to adding a class instead
+                else:
+                    # add membership fee
+                    amount = float(input("Enter membership fee amount to add: $"))
+                    if amount < 0:
+                        print("Amount cannot be negative.")
+                        return
+                    
+                    # update the bill amount
+                    bill.amount_due = bill.amount_due + amount
+                    
+                    session.commit()
+                    print(f"Membership fee added to bill.")
+                    print(f"New bill amount: ${bill.amount_due:.2f}")
+                    return
+            
+            if choice == '2' or (choice == '1' and has_membership):
+                # add a group fitness class
+                class_id = int(input("Enter class ID to add: "))
+                fitness_class = session.query(GroupFitnessClass).filter_by(id=class_id).first()
+                
+                if not fitness_class:
+                    print(f"Class ID {class_id} not found.")
+                    return
+                
+                # check if member is enrolled using relationship and index
+                participation = session.query(ParticipatesIn).filter_by(member_email=bill.member_email, class_id=class_id).first()
+                
+                if not participation:
+                    print("Member is not enrolled in this class.")
+                    return
+                
+                # check if already billed using relationship
+                already_billed = any(gfb.bill.member_email == bill.member_email for gfb in fitness_class.group_fitness_bills)
+                
+                if already_billed:
+                    print("This class is already billed for this member.")
+                    return
+                
+                # add it to the bill
+                gf_bill = GroupFitnessBill(bill_id=bill.id, class_id=class_id)
+                session.add(gf_bill)
+                
+                # update the bill amount
+                bill.amount_due = bill.amount_due + fitness_class.price
+                
+                session.commit()
+                print(f"Class added to bill.")
+                print(f"New bill amount: ${bill.amount_due:.2f}")
+            
+            else:
+                print("Invalid choice.")
+                
+    except ValueError:
+        print("Invalid input. Please enter valid numbers.")
+    except Exception as e:
+        print(f"Error: {e}")
+        if 'session' in locals():
+            session.rollback()
+
+
+
+
+
+def viewUnpaidBills(engine, admin):
+    from sqlalchemy import text
+    
+    with Session(engine) as session:
+        try:
+            # use the view we created called unpaid_bills_view
+            result = session.execute(text("SELECT * FROM unpaid_bills_view ORDER BY bill_id DESC"))
+            rows = result.fetchall()
+            
+            if not rows:
+                print("\nNo unpaid bills found.")
+                return
+            
+            print("\n=== Unpaid Bills ===")
+            
+            for row in rows:
+                print(f"\n{'='*50}")
+                print(f"Bill ID: {row.bill_id}")
+                print(f"Member: {row.member_name} ({row.member_email})")
+                print(f"Phone: {row.member_phone}")
+                print(f"Amount: ${row.amount_due:.2f}")
+                print(f"Payment Method: {row.payment_method}")
+                print(f"Created by: {row.admin_name}")
+                    
+        except Exception as e:
+            print(f"Error: {e}")

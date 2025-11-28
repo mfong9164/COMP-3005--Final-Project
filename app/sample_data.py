@@ -2,6 +2,9 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 import sys
 from pathlib import Path
+from datetime import datetime
+from sqlalchemy.dialects.postgresql import TSRANGE
+from psycopg2.extras import DateTimeRange
 
 # Add parent directory to path
 parent_dir = Path(__file__).parent.parent
@@ -32,6 +35,8 @@ def getSampleData():
     data += memberSample()
     data += roomSample()
     data += equipmentSample()
+    data += groupFitnessClassSample()  
+    data += participatesInSample() 
     return data
 
 def adminSample():
@@ -152,5 +157,103 @@ def equipmentSample():
             name="Mat",
             room_id=2,
             status=EquipmentStatus.IN_SERVICE
+        )
+    ]
+
+def groupFitnessClassSample():
+    return [
+        GroupFitnessClass(
+            trainer_email="PatriciaPerez@gmail.com",
+            room_id=1,
+            time_stamp_range=DateTimeRange(
+                datetime(2024, 12, 20, 8, 0, 0),
+                datetime(2024, 12, 20, 9, 0, 0)
+            ),
+            price=25.00,
+            capacity=10
+        ),
+        GroupFitnessClass(
+            trainer_email="MichelleJohnson@gmail.com",
+            room_id=2, 
+            time_stamp_range=DateTimeRange(
+                datetime(2024, 12, 21, 18, 0, 0),
+                datetime(2024, 12, 21, 19, 0, 0)
+            ),
+            price=30.00,
+            capacity=6
+        ),
+        GroupFitnessClass(
+            trainer_email="JohnThomas@gmail.com",
+            room_id=3,
+            time_stamp_range=DateTimeRange(
+                datetime(2024, 12, 22, 12, 0, 0),
+                datetime(2024, 12, 22, 13, 0, 0)
+            ),
+            price=20.00,
+            capacity=20
+        ),
+        GroupFitnessClass(
+            trainer_email="DanielRodriguez@gmail.com",
+            room_id=1,
+            time_stamp_range=DateTimeRange(
+                datetime(2024, 12, 23, 17, 0, 0),
+                datetime(2024, 12, 23, 18, 0, 0)
+            ),
+            price=35.00,
+            capacity=10
+        ),
+        GroupFitnessClass(
+            trainer_email="PatriciaPerez@gmail.com",
+            room_id=3,
+            time_stamp_range=DateTimeRange(
+                datetime(2024, 12, 24, 10, 0, 0),
+                datetime(2024, 12, 24, 11, 0, 0)
+            ),
+            price=25.00,
+            capacity=20
+        )
+    ]
+
+def participatesInSample():
+    return [
+        ParticipatesIn(
+            member_email="NancyWilliams@hotmail.com",
+            class_id=1
+        ),
+        ParticipatesIn(
+            member_email="LauraJackson@hotmail.com",
+            class_id=1
+        ),
+        ParticipatesIn(
+            member_email="RobertLewis@hotmail.com",
+            class_id=1
+        ),
+        ParticipatesIn(
+            member_email="NancyWilliams@hotmail.com",
+            class_id=2
+        ),
+        ParticipatesIn(
+            member_email="PaulHill@hotmail.com",
+            class_id=2
+        ),
+        ParticipatesIn(
+            member_email="KevinRoberts@hotmail.com",
+            class_id=3
+        ),
+        ParticipatesIn(
+            member_email="LauraJackson@hotmail.com",
+            class_id=3
+        ),
+        ParticipatesIn(
+            member_email="RobertLewis@hotmail.com",
+            class_id=4 
+        ),
+        ParticipatesIn(
+            member_email="PaulHill@hotmail.com",
+            class_id=5
+        ),
+        ParticipatesIn(
+            member_email="KevinRoberts@hotmail.com",
+            class_id=5
         )
     ]
