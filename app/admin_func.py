@@ -40,7 +40,7 @@ def login(engine):
 def menu(engine, admin):
     logged_in = True if admin else False
     while logged_in:
-        print(MENU)
+        print(f"""\n=== {admin.name} Admin Dashboard ===\n1. Create Group Fitness Class\n2. Manage Maintenance Tickets\n3. Billing & Payment\n4. Logout""")
         choice = input("Select an option: ")
         
         if choice == '1':
@@ -54,7 +54,7 @@ def menu(engine, admin):
         else:
             print("Invalid option. Please try again.")
 
-def createGroupClass(engine):
+def createGroupClass(engine, admin):
     while True:
         print('Please create a time slot for the class')
         date_str = input('Please enter the date of the class in the format "YYYY-MM-DD": ')
@@ -122,6 +122,9 @@ def createGroupClass(engine):
     while True:
         try:
             cap = int(input('\nPlease enter the capacity of the class: '))
+            if cap <= 0 or cap >= 20:
+                print('Invalid Input, please enter a capacity between 1 and 20')
+                break;
             break
         except Exception as e:
             print(e)

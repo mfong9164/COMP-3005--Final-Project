@@ -21,7 +21,7 @@ def login(engine):
         try:
             trainer = session.query(Trainer).filter_by(email=login).first()
             if trainer:
-                print(f"Login Successfully. Welcome {trainer.name}!")
+                print(f"\nLogin Successfully. Welcome {trainer.name}!")
                 menu(engine, trainer)
             else:
                 print("Trainer not found. Please enter correct email or contact your admin.")
@@ -32,7 +32,8 @@ def login(engine):
 def menu(engine, trainer):
     logged_in = True if trainer else False
     while logged_in:
-        print(MENU)
+        print(f"""\n=== {trainer.name} Trainer Dashboard ===\n1. Set Availability\n2. Schedule View\n3. Member Lookup\n4. Logout""")
+
         choice = input("Select an option: ")
         if choice == '1':
             setAvailability(engine, trainer)
