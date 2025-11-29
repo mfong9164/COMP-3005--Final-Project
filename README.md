@@ -36,7 +36,7 @@ The system provides a foundation for managing a fitness club’s daily operation
 
 3. Clone the Repository
     1. Open your terminal or command prompt and run the following commands to download the project:
-        ```git clone [https://github.com/mfong9164/COMP-3005--Final-Project](https://github.com/mfong9164/COMP-3005--Final-Project)```
+        ```git clone https://github.com/mfong9164/COMP-3005--Final-Project```
     2. Navigate into the project directory:
         ```cd COMP-3005--Final-Project```
 
