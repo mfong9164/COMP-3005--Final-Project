@@ -110,7 +110,7 @@ def submitAdhocTime(engine, trainer):
     while True:
         try: 
             print('To exit, enter "back".')
-            inp = input('Please enter the date you\'d like to overwrite. (YYYY-MM-DD)').strip().split('-')
+            inp = input('Please enter the date you\'d like to overwrite. (YYYY-MM-DD)').strip()
             if inp.lower() == 'back':
                 return
             date = getInputtedDate(inp)
