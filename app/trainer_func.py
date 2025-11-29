@@ -190,7 +190,7 @@ def viewAdhocSchedule(engine, trainer, time_range):
 
 def viewSchedule(engine, trainer):
     while True: 
-        inp = input('Please input the date range you\'d like to view in the format "YYYY-MM-DD,YYYY-MM-DD"')
+        inp = input('Please input the date range you\'d like to view in the format "YYYY-MM-DD,YYYY-MM-DD": ')
         tsr = getInputtedDates(inp)
         if tsr:
             break
@@ -200,13 +200,13 @@ def viewSchedule(engine, trainer):
         print('No Assigned Classes during Time Slot entered')
         return
 
-    print('[P#] Personal Training Session | [G#] Group Fitness Class')
+    print('[P(ID)] Personal Training Session | [G(ID)] Group Fitness Class')
     print(f'=== {trainer.name}\'s Schedule ===')
     for result in results:
         class_type = result.type
         class_id = result.id
         dow = result.time_stamp_range.lower.strftime('%A')
-        date = result.time_stamp_range.lower.strftime('%Y-m-d')
+        date = result.time_stamp_range.lower.strftime('%Y-%m-%d')
         start_time = result.time_stamp_range.lower.strftime('%H:%M')
         end_time = result.time_stamp_range.upper.strftime('%H:%M')
         room = result.room_id
