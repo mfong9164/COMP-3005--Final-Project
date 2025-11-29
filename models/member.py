@@ -19,16 +19,22 @@ class Member(Base):
     phone_number = Column(String(10), nullable=False)
 
     # One member can have many bills
-    bills = relationship("Bill", back_populates = "member")
+    # lazy='select' means the bills will be loaded with a separate query when accessed (lazy loading)
+    # this avoids loading bills if they are not needed, saving database queries
+    bills = relationship("Bill", back_populates = "member", lazy='select')
 
     # One member can have many health metrics
-    health_metrics = relationship("HealthMetric", back_populates="member")
+    # lazy='select' means health metrics load on access with a separate query
+    health_metrics = relationship("HealthMetric", back_populates="member", lazy='select')
     
     # One member can have many fitness goals
-    fitness_goals = relationship("FitnessGoal", back_populates="member")
+    # lazy='select' means fitness goals load on access with a separate query
+    fitness_goals = relationship("FitnessGoal", back_populates="member", lazy='select')
     
     # One member can have many personal training sessions
-    personal_training_sessions = relationship("PersonalTrainingSession", back_populates="member")
+    # lazy='select' means personal training sessions load on access with a separate query
+    personal_training_sessions = relationship("PersonalTrainingSession", back_populates="member", lazy='select')
 
     # One member can have many participation records for group fitness classes
-    participations = relationship("ParticipatesIn", back_populates="member")
+    # lazy='select' means participations load on access with a separate query
+    participations = relationship("ParticipatesIn", back_populates="member", lazy='select')

@@ -77,6 +77,49 @@ We chose SQL Alchemy to map our PostgreSQL schema to our Python classes. This al
 
 For example, the member entity shows ORM mapping and relationships. The columns are created with types and constraints, and uses ```relationship()``` with ```back_populates``` to create a bidirectional one-to-many link. For example, ```bills = relationship(“Bill”, back_populates=”member”)``` creates a link where ```member.bills``` returns all bills for that member, and ```bills.member``` returns all bills associated with that member. This logic is used across our entities which allows us to access object attributes with manual SQL joins.
 
+**ORM Query Example:**
+```python
+# From member_func.py
+member = session.query(Member).filter_by(email=member_email).first()
+```
+
+**ORM Insertion Example:**
+```python
+# From member_func.py
+new_metric = HealthMetric(
+    member_email=member_email,
+    height=height,
+    weight=weight,
+    heart_rate=heart_rate
+)
+session.add(new_metric)
+session.commit()
+```
+
+**ORM Update Example:**
+```python
+# From member_func.py
+member.name = new_name
+member.phone_number = new_phone
+session.commit()
+```
+
+**ORM Relationship Access:**
+```python
+# From member_func.py - accessing bills through relationship
+bills = member.bills
+for bill in bills:
+    print(bill.amount_due)
+```
+
+**ORM Many-to-Many Access:**
+```python
+# From admin_func.py - accessing related entities
+if bill.group_fitness_bills:  # Uses relationship
+    for gf_bill in bill.group_fitness_bills:
+        class_obj = gf_bill.fitness_class  # Another relationship access
+```
+
 ### ER Model, Relational Schema Mapping, Normalization
 * We created the **ER Model** based on the project requirement and the roles of each type of user and the functionality we were going to implement. View the ERD.pdf file to see ER Model: [ERD.pdf](/docs/ERD.pdf)
 * We **mapped our ER Model into relational tables** by using the methods learned based on cardinality between relationships and foreign keys. View the ERD.pdf file to see ER Model Mapping to Relational Schema: [ERD.pdf](/docs/ERD.pdf)

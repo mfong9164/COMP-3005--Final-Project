@@ -1,4 +1,4 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, selectinload, joinedload
 
 from app.schedule import DOW, getInputtedDate, getInputtedHours, getAvailableTrainers, getAvailableRooms
 
@@ -407,7 +407,11 @@ def createBill(engine, admin):
 def viewAllBills(engine, admin):
     with Session(engine) as session:
         try:
-            bills = session.query(Bill).order_by(Bill.id.desc()).all()
+            # EAGER LOADING: using selectinload to load all bills with their related data upfront
+            # selectinload uses separate SELECT queries with IN clause, which is efficient for multiple relationships
+            # this loads member, group_fitness_bills, and fitness_class all at once
+            # without eager loading, each bill.member and bill.group_fitness_bills access would trigger new queries
+            bills = session.query(Bill).options(selectinload(Bill.member), selectinload(Bill.group_fitness_bills).joinedload(GroupFitnessBill.fitness_class)).order_by(Bill.id.desc()).all()
             
             if not bills:
                 print("No bills found.")
@@ -418,6 +422,7 @@ def viewAllBills(engine, admin):
             for bill in bills:
                 print(f"\n{'='*50}")
                 print(f"Bill ID: {bill.id}")
+                # member is already loaded from eager loading above, no additional query
                 print(f"Member: {bill.member.name} ({bill.member_email})")
                 print(f"Amount: ${bill.amount_due:.2f}")
                 print(f"Payment Method: {bill.payment_method.name}")
@@ -471,9 +476,12 @@ def addItemsToBill(engine, admin):
                 return
             
             # calculate current class total to check if membership fee already exists
+            # LAZY LOADING: group_fitness_bills loads here when accessed with a separate query
+            # this is appropriate here since we only check this if the bill exists and isn't paid
             classes_total = 0.0
             if bill.group_fitness_bills:
                 for gf_bill in bill.group_fitness_bills:
+                    # LAZY LOADING: fitness_class also loads when accessed here with another query
                     classes_total += gf_bill.fitness_class.price
             
             # check if membership fee already exists (if amount > class total)

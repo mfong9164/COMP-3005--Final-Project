@@ -1,9 +1,10 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from models.member import Member
 from models.fitness_goal import FitnessGoal
 from operator import attrgetter
 from models.health_metric import HealthMetric
 from models.bill import Bill
+from models.group_fitness_bill import GroupFitnessBill
 from models.enums import GoalType, PaymentMethod, Gender
 
 def member_menu(engine):
@@ -286,6 +287,9 @@ def view_member_health_metrics(engine, member_email):
         member = session.query(Member).filter_by(email=member_email).first()
 
         if member:
+            # LAZY LOADING: health_metrics loads when accessed here with a separate query
+            # this is efficient because we only load health metrics if the member exists
+            # if member didn't exist, we avoid the extra query to load health metrics
             metrics = member.health_metrics
             if metrics:
                 print(f"\n--- {member.name} Latest Health Metrics ---")
@@ -400,13 +404,16 @@ def update_member_fitness_goals(engine, member_email):
 def view_my_bills(engine, member_email):
     with Session(engine) as session:
         try:
-            member = session.query(Member).filter_by(email=member_email).first()
+            # EAGER LOADING: using joinedload to load member with bills and nested relationships in fewer queries
+            # this loads bills, group_fitness_bills, and fitness_class all at once using JOINs
+            # this is more efficient than lazy loading when we know we'll need all the bill data
+            member = session.query(Member).options(joinedload(Member.bills).joinedload(Bill.group_fitness_bills).joinedload(GroupFitnessBill.fitness_class)).filter_by(email=member_email).first()
             
             if not member:
                 print("Member not found.")
                 return
             
-            # uses the relationship function to get all the bills for the given member
+            # bills are already loaded from the query above (eager loading), no additional query needed
             bills = member.bills
             
             if not bills:
@@ -437,7 +444,7 @@ def view_my_bills(engine, member_email):
                 if bill.group_fitness_bills:
                     for gf_bill in bill.group_fitness_bills:
                         # this goes through each group fitness class bill the member has and accumulates the total price of those bills
-                        # is also displays individual group fitness class bills and their prices
+                        # it also displays individual group fitness class bills and their prices
                         class_obj = gf_bill.fitness_class
                         classes_total += class_obj.price
                         print(f"  - Group Fitness Class #{class_obj.id} - ${class_obj.price:.2f}")
@@ -488,13 +495,15 @@ def view_my_unpaid_bills(engine, member_email):
                 print(f"Status: UNPAID")
                 
                 # get the full Bill object to access the line items
-                bill = session.query(Bill).filter_by(id=row.bill_id).first()
+                # EAGER LOADING: load bill with group_fitness_bills and fitness_class to avoid lazy loading queries
+                bill = session.query(Bill).options(joinedload(Bill.group_fitness_bills).joinedload(GroupFitnessBill.fitness_class)).filter_by(id=row.bill_id).first()
                 
                 if bill:
                     # show line items
                     print("\nItems on this bill:")
                     
                     # calculate total from the group fitness classes
+                    # group_fitness_bills and fitness_class are already loaded, no additional queries needed
                     classes_total = 0.0
                     if bill.group_fitness_bills:
                         for gf_bill in bill.group_fitness_bills:
@@ -528,7 +537,8 @@ def pay_bill(engine, member_email):
         
         with Session(engine) as session:
             # find the bill and make sure it belongs to this member
-            bill = session.query(Bill).filter_by(id=bill_id, member_email=member_email).first()
+            # EAGER LOADING: load bill with group_fitness_bills and fitness_class to avoid multiple queries
+            bill = session.query(Bill).options(joinedload(Bill.group_fitness_bills).joinedload(GroupFitnessBill.fitness_class)).filter_by(id=bill_id, member_email=member_email).first()
             
             if not bill:
                 print(f"Bill ID {bill_id} not found or does not belong to you.")
@@ -546,6 +556,7 @@ def pay_bill(engine, member_email):
             print(f"Amount: ${bill.amount_due:.2f}")
             
             # show line items and their prices
+            # group_fitness_bills and fitness_class are already loaded, no additional queries needed
             print("\nItems on this bill:")
             classes_total = 0.0
             if bill.group_fitness_bills:
