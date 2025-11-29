@@ -1,4 +1,4 @@
-# **COMP 3005 Final-Project**
+# **COMP 3005 Final Project**
 
 ## **COMP 3005 - Database Management Systems (Fall 2025)**
 
