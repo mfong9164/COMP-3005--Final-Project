@@ -54,13 +54,18 @@ class Bill(Base):
     paid_date = Column(Date, nullable=True)
     
     # Many bills can belong to one member
-    member = relationship("Member", back_populates="bills")
+    # lazy='select' means the member loads on access with a separate query (lazy loading)
+    member = relationship("Member", back_populates="bills", lazy='select')
     
     # Many bills can be processed by one admin
-    admin = relationship("Admin", back_populates="bills")
+    # lazy='select' means the admin loads on access with a separate query (lazy loading)
+    admin = relationship("Admin", back_populates="bills", lazy='select')
     
     # One bill can be linked to many personal training sessions via PersonalTrainingBill
-    personal_training_bills = relationship("PersonalTrainingBill", back_populates="bill")
+    # lazy='select' means personal training bills load on access with a separate query
+    personal_training_bills = relationship("PersonalTrainingBill", back_populates="bill", lazy='select')
     
     # One bill can be linked to many group fitness classes via GroupFitnessBill
-    group_fitness_bills = relationship("GroupFitnessBill",back_populates="bill")
+    # lazy='select' means group fitness bills load on access with a separate query
+    # when accessing bill.group_fitness_bills, a new query is executed to load them
+    group_fitness_bills = relationship("GroupFitnessBill", back_populates="bill", lazy='select')

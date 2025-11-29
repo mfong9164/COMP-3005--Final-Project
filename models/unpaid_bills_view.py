@@ -1,7 +1,7 @@
 from sqlalchemy import text
 
 def drop_unpaid_bills_view(engine):
-    """Drop the unpaid_bills_view if it exists"""
+    # Drop the unpaid_bills_view if it exists
     drop_view_sql = """
     DROP VIEW IF EXISTS unpaid_bills_view CASCADE;
     """

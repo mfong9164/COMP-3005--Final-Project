@@ -36,7 +36,8 @@ def getSampleData():
     data += roomSample()
     data += equipmentSample()
     data += groupFitnessClassSample()  
-    data += participatesInSample() 
+    data += participatesInSample()
+    data += personalTrainingSessionSample()
     return data
 
 def adminSample():
@@ -117,24 +118,7 @@ def memberSample():
         )
     ]
 def roomSample():
-    return [
-        Room (
-            room_type=RoomType.STUDIO,
-            capacity=10
-        ), Room (
-            room_type=RoomType.STUDIO,
-            capacity=6
-        ), Room (
-            room_type=RoomType.STUDIO,
-            capacity=20
-        ), Room (
-            room_type=RoomType.TRAINING_ROOM,
-            capacity=15
-        ), Room (
-            room_type=RoomType.TRAINING_ROOM,
-            capacity=30
-        )
-    ]
+    return [Room (), Room (), Room (), Room (), Room ()]
 def equipmentSample():
     return [
         Equipment (
@@ -166,8 +150,8 @@ def groupFitnessClassSample():
             trainer_email="PatriciaPerez@gmail.com",
             room_id=1,
             time_stamp_range=DateTimeRange(
-                datetime(2024, 12, 20, 8, 0, 0),
-                datetime(2024, 12, 20, 9, 0, 0)
+                datetime(2024, 12, 20, 9, 0, 0),
+                datetime(2024, 12, 20, 10, 0, 0)
             ),
             price=25.00,
             capacity=10
@@ -176,8 +160,8 @@ def groupFitnessClassSample():
             trainer_email="MichelleJohnson@gmail.com",
             room_id=2, 
             time_stamp_range=DateTimeRange(
-                datetime(2024, 12, 21, 18, 0, 0),
-                datetime(2024, 12, 21, 19, 0, 0)
+                datetime(2024, 12, 23, 12, 0, 0),
+                datetime(2024, 12, 23, 13, 0, 0)
             ),
             price=30.00,
             capacity=6
@@ -186,8 +170,8 @@ def groupFitnessClassSample():
             trainer_email="JohnThomas@gmail.com",
             room_id=3,
             time_stamp_range=DateTimeRange(
-                datetime(2024, 12, 22, 12, 0, 0),
-                datetime(2024, 12, 22, 13, 0, 0)
+                datetime(2024, 12, 23, 12, 0, 0),
+                datetime(2024, 12, 23, 13, 0, 0)
             ),
             price=20.00,
             capacity=20
@@ -196,8 +180,8 @@ def groupFitnessClassSample():
             trainer_email="DanielRodriguez@gmail.com",
             room_id=1,
             time_stamp_range=DateTimeRange(
-                datetime(2024, 12, 23, 17, 0, 0),
-                datetime(2024, 12, 23, 18, 0, 0)
+                datetime(2024, 12, 23, 10, 0, 0),
+                datetime(2024, 12, 23, 11, 0, 0)
             ),
             price=35.00,
             capacity=10
@@ -257,3 +241,42 @@ def participatesInSample():
             class_id=5
         )
     ]
+
+def personalTrainingSessionSample():
+    return [
+        PersonalTrainingSession(
+            trainer_email="MichelleJohnson@gmail.com",
+            member_email="NancyWilliams@hotmail.com",
+            room_id=2,
+            time_stamp_range=DateTimeRange(datetime(2024, 12, 18, 9, 0, 0),  datetime(2024, 12, 18, 10, 0, 0)),
+            price=65.00
+        ),
+        PersonalTrainingSession(
+            trainer_email="JohnThomas@gmail.com",
+            member_email="PaulHill@hotmail.com",
+            room_id=4,
+            time_stamp_range=DateTimeRange(datetime(2024, 12, 19, 15, 0, 0), datetime(2024, 12, 19, 16, 0, 0)),
+            price=70.00
+        ),
+        PersonalTrainingSession(
+            trainer_email="DanielRodriguez@gmail.com",
+            member_email="KevinRoberts@hotmail.com",
+            room_id=3,
+            time_stamp_range=DateTimeRange(datetime(2024, 12, 20, 9, 30, 0), datetime(2024, 12, 20, 10, 30, 0)),
+            price=60.00
+        ),
+        PersonalTrainingSession(
+            trainer_email="AnthonyLopez@gmail.com",
+            member_email="LauraJackson@hotmail.com",
+            room_id=5,
+            time_stamp_range=DateTimeRange(datetime(2024, 12, 23, 14, 0, 0), datetime(2024, 12, 23, 15, 0, 0)),
+            price=75.00
+        ),
+        PersonalTrainingSession(
+            trainer_email="PatriciaPerez@gmail.com",
+            member_email="RobertLewis@hotmail.com",
+            room_id=4,
+            time_stamp_range=DateTimeRange(datetime(2024, 12, 23, 14, 0, 0), datetime(2024, 12, 23, 15, 0, 0)),
+            price=50.00
+        ),
+    ]    

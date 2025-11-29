@@ -26,12 +26,14 @@ from models.maintenance_ticket import MaintenanceTicket
 from models.participates_in import ParticipatesIn
 from app.sample_data import getSampleData
 from models.paid_date_trigger import create_paid_date_trigger
+from models.availability_triggers import create_init_trainer_availability_trigger, check_class_time_trigger
 from models.unpaid_bills_view import create_unpaid_bills_view, drop_unpaid_bills_view
 
 from app.member_func import member_menu
 from app.trainer_func import login as trainer_menu
 from app.admin_func import login as admin_menu
 
+# Database Configuration
 DB_USER = 'postgres'
 DB_HOST = 'localhost'
 DB_PORT = '5432'
@@ -47,8 +49,9 @@ def create_connection():
             print("Connected")
 
             drop_unpaid_bills_view(engine)
+            add_btre_gist(conn)
 
-            Base.metadata.drop_all(engine, checkfirst=True)
+            Base.metadata.drop_all(engine, checkfirst=True)            
             Base.metadata.create_all(engine, checkfirst=True)
 
             # we create the trigger after tables are created
@@ -57,6 +60,9 @@ def create_connection():
             # create the view after tables are created
             create_unpaid_bills_view(engine)
             
+            create_init_trainer_availability_trigger(engine)
+
+            check_class_time_trigger(engine)
 
     except Exception as e:
         print(f"Failed: {e}")
@@ -97,10 +103,11 @@ def main_menu(engine):
         else:
             print("Invalid option. Please try again.")
 
+def add_btre_gist(conn):
+    conn.execute(text("CREATE EXTENSION IF NOT EXISTS btree_gist;"))
+    conn.commit()
+    print("btree_gist extension created successfully.")
+
 if __name__ == '__main__':
     engine = create_connection()
     main_menu(engine)
-    
-
-
-    
