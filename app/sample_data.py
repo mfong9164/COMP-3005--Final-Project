@@ -248,14 +248,14 @@ def personalTrainingSessionSample():
             trainer_email="MichelleJohnson@gmail.com",
             member_email="NancyWilliams@hotmail.com",
             room_id=2,
-            time_stamp_range=DateTimeRange(datetime(2024, 12, 18, 7, 0, 0),  datetime(2024, 12, 18, 8, 0, 0)),
+            time_stamp_range=DateTimeRange(datetime(2024, 12, 18, 9, 0, 0),  datetime(2024, 12, 18, 10, 0, 0)),
             price=65.00
         ),
         PersonalTrainingSession(
             trainer_email="JohnThomas@gmail.com",
             member_email="PaulHill@hotmail.com",
             room_id=4,
-            time_stamp_range=DateTimeRange(datetime(2024, 12, 19, 18, 0, 0), datetime(2024, 12, 19, 19, 0, 0)),
+            time_stamp_range=DateTimeRange(datetime(2024, 12, 19, 15, 0, 0), datetime(2024, 12, 19, 16, 0, 0)),
             price=70.00
         ),
         PersonalTrainingSession(
@@ -269,14 +269,14 @@ def personalTrainingSessionSample():
             trainer_email="AnthonyLopez@gmail.com",
             member_email="LauraJackson@hotmail.com",
             room_id=5,
-            time_stamp_range=DateTimeRange(datetime(2024, 12, 21, 14, 0, 0), datetime(2024, 12, 21, 15, 0, 0)),
+            time_stamp_range=DateTimeRange(datetime(2024, 12, 23, 14, 0, 0), datetime(2024, 12, 23, 15, 0, 0)),
             price=75.00
         ),
         PersonalTrainingSession(
             trainer_email="PatriciaPerez@gmail.com",
             member_email="RobertLewis@hotmail.com",
             room_id=4,
-            time_stamp_range=DateTimeRange(datetime(2024, 12, 22, 11, 0, 0), datetime(2024, 12, 22, 12, 0, 0)),
+            time_stamp_range=DateTimeRange(datetime(2024, 12, 23, 14, 0, 0), datetime(2024, 12, 23, 15, 0, 0)),
             price=50.00
         ),
     ]    
