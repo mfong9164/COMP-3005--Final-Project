@@ -24,11 +24,10 @@ The system provides a foundation for managing a fitness club’s daily operation
 
 ### **Setup & How to Run**
 1. Prerequisites
-    Ensure you have the following downloaded and intalled on your computer:
+    Ensure you have the following downloaded and installed on your computer:
     * Python 3.10+
     * PostgreSQL (Make sure the service is running)
-    * In the root directory, install the required library of psycopg2 by writing the following in the terminal:
-     ```pip install sqlalchemy psycopg2```
+    * psycopg2 library
 
 2. Database Configuration
     1. Open pgAdmin or your terminal and create a new database called "Health and Fitness Club Management System"
@@ -39,11 +38,13 @@ The system provides a foundation for managing a fitness club’s daily operation
         ```git clone https://github.com/mfong9164/COMP-3005--Final-Project```
     2. Navigate into the project directory:
         ```cd COMP-3005--Final-Project```
+    3. In the root directory, install the required library of psycopg2 by writing the following in the terminal:
+     ```pip install sqlalchemy psycopg2```
 
 4. Running the Program
     1. From the root project directory, navigate to the /app directory by typing the following in the terminal: ```cd app```
     2. Run the main application file: ```python main.py```
-    3. Follow the CLI Interface
+    3. Follow the CLI Interface. The program inserts sample data once it starts, and drops all data once it ends.
 
 
 ### **Implemented Functionalities**
