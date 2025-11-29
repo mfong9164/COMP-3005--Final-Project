@@ -90,7 +90,7 @@ def member_dashboard(engine, member_email):
 
                 else:
                     print("Invalid option. Please try again.")  
-                         
+
             except Exception as e:
                 print(f"Error: {e}")
         
@@ -362,7 +362,7 @@ def update_member_fitness_goals(engine, member_email):
 
             elif goal_type == 3:
                 goal_type_enum = GoalType.CARDIO
-                amount = int(input("Enter cardio time goal: "))
+                amount = int(input("Enter cardio time goal (mins): "))
             else:
                 print("Invalid option.")
                 return
