@@ -9,10 +9,11 @@ from app.base import Base
 from sqlalchemy import *
 from models.enums import Gender
 from sqlalchemy.orm import relationship
+from sqlalchemy import UniqueConstraint
 
 class Member(Base):
     __tablename__ = "Member"
-    email = Column(String(255), primary_key=True)
+    email = Column(String(255), primary_key=True, unique=True)
     name = Column(String(100), nullable=False)
     date_of_birth = Column(Date, nullable=False)
     gender = Column(Enum(Gender), nullable=False)

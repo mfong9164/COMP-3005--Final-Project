@@ -49,8 +49,21 @@ def member_login(engine):
             print(f"Error: {e}")
 
 def member_registration(engine):
-    # TODO: Liam's Member Registration Function
-    pass
+    while True:
+        with Session(engine) as session:
+            try:
+                print(f"\n=== Member Registration ===")
+                input_email = input("Email: ")
+                input_name = input("Name: ")
+                input_date_of_birth = input("Date of birth (YYYY-MM-DD): ")
+                input_gender = (input("Gender (Male, Female, Other): ").upper())
+                input_phone_number = input("Phone Number (##########): ")
+
+                session.add(Member(email=input_email,name=input_name,date_of_birth=input_date_of_birth,gender=input_gender,phone_number=input_phone_number))
+                session.commit()
+                break
+            except Exception as e:
+                print(f"Registration Error: {e}")
 
 
 
