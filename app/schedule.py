@@ -233,6 +233,10 @@ def getAvailableTrainers(engine, tsr):
 # tsr: DateTimeRange *Must be on the same day*
 # Returns a list of room ids (Int)
 def getAvailableRooms(engine, tsr):
+    if getDate(tsr.lower) != getDate(tsr.upper):
+        print('Invalid TimeStampRange: Different Dates')
+        return
+
     with Session(engine) as session:
         hasGFC = session.query(GroupFitnessClass.id).filter(
             GroupFitnessClass.room_id == Room.room_id,
