@@ -24,7 +24,10 @@ The system provides a foundation for managing a fitness club’s daily operation
 
 2. Database Configuration
     1. Open pgAdmin or your terminal and create a new database called "Health and Fitness Club Management System"
-    2. 
+    2. in COMP-3005--Final-Project\app\main.py, ensure Database Configuration variables are set to your database credentials (lines 37-40)
+    3. In the root directory, install the required library of psycopg2 by writing the following in the terminal:
+     ```pip install sqlalchemy psycopg2```
+     
 
 ### Implemented Functionalities 
 

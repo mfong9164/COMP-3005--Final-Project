@@ -33,6 +33,7 @@ from app.member_func import member_menu
 from app.trainer_func import login as trainer_menu
 from app.admin_func import login as admin_menu
 
+# Database Configuration
 DB_USER = 'postgres'
 DB_HOST = 'localhost'
 DB_PORT = '5432'
