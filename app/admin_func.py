@@ -1,4 +1,7 @@
 from sqlalchemy.orm import Session
+
+from app.schedule import DOW, getInputtedDate, getInputtedHours, getAvailableTrainers, getAvailableRooms
+
 from models.admin import Admin
 from models.maintenance_ticket import MaintenanceTicket
 from models.equipment import Equipment
@@ -9,14 +12,15 @@ from models.group_fitness_bill import GroupFitnessBill
 from models.group_fitness_class import GroupFitnessClass
 from models.member import Member
 from models.participates_in import ParticipatesIn
+from models.trainer import Trainer
+from models.room import Room
 
 MENU = """
 === Admin Dashboard ===
-1. Room Booking
+1. Create Group Fitness Class
 2. Manage Maintenance Tickets
-3. Class Management
-4. Billing & Payment
-5. Logout
+3. Billing & Payment
+4. Logout
 """
 
 def login(engine):
@@ -40,20 +44,98 @@ def menu(engine, admin):
         choice = input("Select an option: ")
         
         if choice == '1':
-            bookRoom(engine, admin)
+            createGroupClass(engine, admin)
         elif choice == '2':
             manageMaintenanceTickets(engine, admin)
         elif choice == '3':
-            manageClasses(engine, admin)
-        elif choice == '4':
             manageBilling(engine, admin)
-        elif choice == '5':
+        elif choice == '4':
             break
         else:
             print("Invalid option. Please try again.")
 
-def bookRoom(engine, admin):
-    pass
+def createGroupClass(engine):
+    while True:
+        print('Please create a time slot for the class')
+        date_str = input('Please enter the date of the class in the format "YYYY-MM-DD": ')
+        date = getInputtedDate(date_str)
+        if date:
+            break
+    while True:
+        print(f'Date: {date.strftime('%Y-%m-%d')}')
+        timeslot_str = input('Please enter the time of the class in the format "HH:MM,HH:MM":')
+        tsr = getInputtedHours(timeslot_str, date)
+        if tsr:
+            break
+
+    trainers = getAvailableTrainers(engine, tsr)
+    if len(trainers) == 0:
+        print('No available trainers during this time, please select a different time.')
+        return
+    
+    print(f'Available Trainers: {trainers}')
+    
+    while True:
+        trainer_str = input('\n\nPlease select the trainer (case sensitive): ').strip()
+        try:
+            if trainer_str not in trainers:
+                print('Invalid Input')
+                continue
+        except Exception as e:
+            print(e)
+            continue
+        
+        with Session(engine) as session:
+            trainer = session.query(Trainer).filter_by(email=trainer_str).first()
+            if trainer:
+                break
+
+    rooms = getAvailableRooms(engine, tsr)
+    if len(rooms) == 0:
+        print('No available rooms during this time, please select a different time.')
+        return
+
+    print(f'Available Rooms: {rooms}')
+    
+    while True:
+        room_str = input('\n\nPlease select the room (case sensitive): ').strip()
+
+        try:
+            if int(room_str) not in rooms:
+                print('Invalid Input')
+                continue
+        except Exception as e:
+            print(e)
+
+        with Session(engine) as session:
+            room = session.query(Room).filter_by(room_id=room_str).first()
+            if room:
+                break
+    
+    while True:
+        try:
+            cost = float(input('\nPlease enter the cost of the class: '))
+            break
+        except Exception as e:
+            print(e)
+    
+    while True:
+        try:
+            cap = int(input('\nPlease enter the capacity of the class: '))
+            break
+        except Exception as e:
+            print(e)
+
+    newGFC = GroupFitnessClass(
+        trainer_email=trainer.email,
+        room_id=room.room_id,
+        time_stamp_range=tsr,
+        price=cost,
+        capacity=cap
+    )
+
+    session.add(newGFC)
+    session.commit()
 
 def manageMaintenanceTickets(engine, admin):
     while True:
@@ -199,18 +281,6 @@ def updateMaintenanceTicketStatus(engine, admin):
         except Exception as e:
             print(f"Error: {e}")
             session.rollback()
-
-
-
-
-
-
-def manageClasses(engine, admin):
-    pass
-
-
-
-
 
 
 def manageBilling(engine, admin):

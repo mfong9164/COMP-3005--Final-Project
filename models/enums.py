@@ -12,17 +12,12 @@ class GoalType(enum.Enum):
 
 class AvailabilityType(enum.Enum):
     RECURRING = 0
-    OVER_TIME = 1
-    TIME_OFF = 2
+    ADHOC = 1
 
 class Gender(enum.Enum):
     MALE = 0
     FEMALE = 1
     OTHER = 2
-
-class RoomType(enum.Enum):
-    STUDIO = 0
-    TRAINING_ROOM = 1
 
 class EquipmentStatus(enum.Enum):
     IN_SERVICE = 0
