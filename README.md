@@ -24,22 +24,22 @@ The system provides a foundation for managing a fitness club’s daily operation
 
 ### **Setup & How to Run**
 1. Prerequisites
-    Ensure you have the following downloaded and installed on your computer:
+    These are the requirements needed to run this project on your computer:
     * Python 3.10+
     * PostgreSQL (Make sure the service is running)
     * psycopg2 library
 
-2. Database Configuration
-    1. Open pgAdmin or your terminal and create a new database called "Health and Fitness Club Management System"
-    2. in COMP-3005--Final-Project\app\main.py, ensure Database Configuration variables are set to your database credentials (lines 37-40)
-
-3. Clone the Repository
+2. Clone the Repository
     1. Open your terminal or command prompt and run the following commands to download the project:
         ```git clone https://github.com/mfong9164/COMP-3005--Final-Project```
     2. Navigate into the project directory:
         ```cd COMP-3005--Final-Project```
     3. In the root directory, install the required library of psycopg2 by writing the following in the terminal:
      ```pip install sqlalchemy psycopg2```
+     
+3. Database Configuration
+    1. Open pgAdmin or your terminal and create a new database called "Health and Fitness Club Management System"
+    2. in COMP-3005--Final-Project\app\main.py, ensure Database Configuration variables are set to your database credentials (lines 37-40)
 
 4. Running the Program
     1. From the root project directory, navigate to the /app directory by typing the following in the terminal: ```cd app```
@@ -72,10 +72,10 @@ The system provides a foundation for managing a fitness club’s daily operation
     * One of the **triggers** we created was a trigger that would  automatically set the paid_date to the current date once a bill is paid. It is called "trigger_set_paid_date". This trigger works by being called once a bill has been paid and checks if the old value of bill.paid changed from False to True, which means the bill has been paid and sets the current date to the paid_date. This would allow for users to accurately see when a bill has been paid.
     * The **index** we created was on the class_id in the ParticipatesIn model in our system. To do this, we simply included a parameter index=True when creating the column for the model. This would make it so when querying for records in this table, it will be more efficient, especially if the table has large amounts of records. In this system, as the amount of users gets large, the number of members and classes would become large as it also stores previous classes and not just future classes. This means, when checking for bills, or class capacity, or something else that requires checking who or how many participants there are for a class, it will be more efficient on the DBMS if using an index.
 
-### ORM Integration (SQL Alchemy)
+### ORM Integration (SQLAlchemy)
 We chose SQL Alchemy to map our PostgreSQL schema to our Python classes. This allowed us to use maintainable, object-oriented code instead of raw SQL. SQLAlchemy handles relationships, foreign keys, and constraints. It also supports automatic session management and type safety which improves code quality and maintainability. This allowed us to work with Python objects and relationships (ex, ```member.bills```, ```bill.group_fitness_bills```) rather than manual joins and SQL strings.
 
-For example, the member entity shows ORM mapping and relationships. The columns are created with types and constraints, and uses ```relationship()``` with ```back_populates``` to create a bidirectional one-to-many link. For example, ```bills = relationship(“Bill”, back_populates=”member”)``` creates a link where ```member.bills``` returns all bills for that member, and ```bills.member``` returns all bills associated with that member. This logic is used across our entities which allows us to access object attributes with manual SQL joins.
+For example, the member entity shows ORM mapping, relationships, and lazy loading. The columns are created with types and constraints, and uses ```relationship()``` with ```back_populates``` to create a bidirectional one-to-many link. These relationships are lazy loaded, which means the data is loaded on access with a separate query. For example, ```bills = relationship("Bill", back_populates = "member", lazy='select')``` creates a link where ```member.bills``` returns all bills for that member, and ```bills.member``` returns all bills associated with that member. This logic is used across our entities which allows us to access object attributes with manual SQL joins. However, across our application, there may be times where we want to bundle several joins to get related data across several entities which would be inefficient for doing this in separate queries. So we use eager loading to bundle the query into 1 database trip to get all the data needed for that specific entity. Examples of ORM usage can be seen below.
 
 **ORM Query Example:**
 ```python
@@ -106,12 +106,19 @@ session.commit()
 
 **ORM Relationship Access:**
 ```python
-# From member_func.py - accessing bills through relationship
+# From member_func.py - accessing bills through relationship which is lazy loaded (seperate queries)
 bills = member.bills
 for bill in bills:
     print(bill.amount_due)
 ```
-
+**ORM Eager Loaded Query**
+```python
+# using selectinload to load all bills with their related data upfront
+# selectinload uses separate SELECT queries with IN clause, which is efficient for multiple relationships
+# this loads member, group_fitness_bills, and fitness_class all at once
+# without eager loading, each bill.member and bill.group_fitness_bills access would trigger new queries
+bills = session.query(Bill).options(selectinload(Bill.member), selectinload(Bill.group_fitness_bills).joinedload(GroupFitnessBill.fitness_class)).order_by(Bill.id.desc()).all()
+```
 **ORM Many-to-Many Access:**
 ```python
 # From admin_func.py - accessing related entities
