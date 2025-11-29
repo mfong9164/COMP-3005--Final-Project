@@ -163,7 +163,7 @@ def viewAvailabilitySchedule(engine, trainer):
             viewRecurringSchedule(engine, trainer)
         elif choice == '2':
             while True: 
-                inp = input('Please input the date range you\'d like to view in the format "YYYY-MM-DD,YYYY-MM-DD"')
+                inp = input('Please input the date range you\'d like to view in the format "YYYY-MM-DD,YYYY-MM-DD": ')
                 tsr = getInputtedDates(inp)
                 if tsr:
                     break
