@@ -117,24 +117,7 @@ def memberSample():
         )
     ]
 def roomSample():
-    return [
-        Room (
-            room_type=RoomType.STUDIO,
-            capacity=10
-        ), Room (
-            room_type=RoomType.STUDIO,
-            capacity=6
-        ), Room (
-            room_type=RoomType.STUDIO,
-            capacity=20
-        ), Room (
-            room_type=RoomType.TRAINING_ROOM,
-            capacity=15
-        ), Room (
-            room_type=RoomType.TRAINING_ROOM,
-            capacity=30
-        )
-    ]
+    return [Room (), Room (), Room (), Room (), Room ()]
 def equipmentSample():
     return [
         Equipment (
@@ -166,8 +149,8 @@ def groupFitnessClassSample():
             trainer_email="PatriciaPerez@gmail.com",
             room_id=1,
             time_stamp_range=DateTimeRange(
-                datetime(2024, 12, 20, 8, 0, 0),
-                datetime(2024, 12, 20, 9, 0, 0)
+                datetime(2024, 12, 20, 9, 0, 0),
+                datetime(2024, 12, 20, 10, 0, 0)
             ),
             price=25.00,
             capacity=10
@@ -176,8 +159,8 @@ def groupFitnessClassSample():
             trainer_email="MichelleJohnson@gmail.com",
             room_id=2, 
             time_stamp_range=DateTimeRange(
-                datetime(2024, 12, 21, 18, 0, 0),
-                datetime(2024, 12, 21, 19, 0, 0)
+                datetime(2024, 12, 23, 12, 0, 0),
+                datetime(2024, 12, 23, 13, 0, 0)
             ),
             price=30.00,
             capacity=6
@@ -186,8 +169,8 @@ def groupFitnessClassSample():
             trainer_email="JohnThomas@gmail.com",
             room_id=3,
             time_stamp_range=DateTimeRange(
-                datetime(2024, 12, 22, 12, 0, 0),
-                datetime(2024, 12, 22, 13, 0, 0)
+                datetime(2024, 12, 23, 12, 0, 0),
+                datetime(2024, 12, 23, 13, 0, 0)
             ),
             price=20.00,
             capacity=20
@@ -196,8 +179,8 @@ def groupFitnessClassSample():
             trainer_email="DanielRodriguez@gmail.com",
             room_id=1,
             time_stamp_range=DateTimeRange(
-                datetime(2024, 12, 23, 17, 0, 0),
-                datetime(2024, 12, 23, 18, 0, 0)
+                datetime(2024, 12, 23, 10, 0, 0),
+                datetime(2024, 12, 23, 11, 0, 0)
             ),
             price=35.00,
             capacity=10
