@@ -5,7 +5,7 @@
 ### **Group Members**
 * Neil Varshney (101295007)
 * Michael Fong (101300972)
-* 
+* Liam McAnulty (101309972)
 
 ### Project Video Demo Link
 
@@ -75,7 +75,7 @@ The system provides a foundation for managing a fitness club’s daily operation
 ### ORM Integration (SQLAlchemy)
 We chose SQL Alchemy to map our PostgreSQL schema to our Python classes. This allowed us to use maintainable, object-oriented code instead of raw SQL. SQLAlchemy handles relationships, foreign keys, and constraints. It also supports automatic session management and type safety which improves code quality and maintainability. This allowed us to work with Python objects and relationships (ex, ```member.bills```, ```bill.group_fitness_bills```) rather than manual joins and SQL strings.
 
-For example, the member entity shows ORM mapping, relationships, and lazy loading. The columns are created with types and constraints, and uses ```relationship()``` with ```back_populates``` to create a bidirectional one-to-many link. These relationships are lazy loaded, which means the data is loaded on access with a separate query. For example, ```bills = relationship("Bill", back_populates = "member", lazy='select')``` creates a link where ```member.bills``` returns all bills for that member, and ```bills.member``` returns all bills associated with that member. This logic is used across our entities which allows us to access object attributes with manual SQL joins. However, across our application, there may be times where we want to bundle several joins to get related data across several entities which would be inefficient for doing this in separate queries. So we use eager loading to bundle the query into 1 database trip to get all the data needed for that specific entity. Examples of ORM usage can be seen below.
+For example, the member entity shows ORM mapping, relationships, and lazy loading. The columns are created with types and constraints, and uses ```relationship()``` with ```back_populates``` to create a bidirectional one-to-many link. These relationships are lazy loaded, which means the data is loaded on access with a separate query. For example, ```bills = relationship("Bill", back_populates = "member", lazy='select')``` creates a link where ```member.bills``` returns all bills for that member, and ```bills.member``` returns all bills associated with that member. This logic is used across our entities which allows us to access object attributes with manual SQL joins. However, across our application, there may be times where we want to bundle several joins to get related data across several entities which would be inefficient if doing this in separate queries. So we use eager loading to bundle the query into 1 database trip to get all the data needed for that specific entity. Examples of ORM usage can be seen below.
 
 **ORM Query Example:**
 ```python
@@ -119,6 +119,7 @@ for bill in bills:
 # without eager loading, each bill.member and bill.group_fitness_bills access would trigger new queries
 bills = session.query(Bill).options(selectinload(Bill.member), selectinload(Bill.group_fitness_bills).joinedload(GroupFitnessBill.fitness_class)).order_by(Bill.id.desc()).all()
 ```
+
 **ORM Many-to-Many Access:**
 ```python
 # From admin_func.py - accessing related entities
