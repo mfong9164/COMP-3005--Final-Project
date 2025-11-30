@@ -1,8 +1,11 @@
 from sqlalchemy.orm import Session
+from sqlalchemy import func
 from datetime import datetime
 
 from models.enums import AvailabilityType
 from models.trainer import Trainer
+from models.member import Member
+from app.member_func import view_member_health_metrics, view_member_fitness_goals
 from models.trainer_availability import TrainerAvailability
 
 from app.schedule import DOW, getInputtedDate, getInputtedDates, getInputtedHours, getAdhocSchedule, getRecurringSchedule, getAssignedClasses
@@ -214,4 +217,10 @@ def viewSchedule(engine, trainer):
         print(f'[{class_type}{class_id}] {dow} {date} @ {start_time} to {end_time} in Room {room}')
 
 def lookupMember(engine, trainer):
-    pass
+    input_name = input("Name of Member: ")
+    with Session(engine) as session:
+        searched_member = session.query(Member).filter(func.lower(Member.name) == func.lower(input_name)).all()
+        for member in searched_member:
+            view_member_fitness_goals(engine, member.email)
+            view_member_health_metrics(engine, member.email)
+        

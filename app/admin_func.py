@@ -62,7 +62,7 @@ def createGroupClass(engine, admin):
         if date:
             break
     while True:
-        print(f'Date: {date.strftime('%Y-%m-%d')}')
+        print(f'Date: {date.strftime("%Y-%m-%d")}')
         timeslot_str = input('Please enter the time of the class in the format "HH:MM,HH:MM":')
         tsr = getInputtedHours(timeslot_str, date)
         if tsr:

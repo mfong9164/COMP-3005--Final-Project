@@ -71,6 +71,8 @@ def member_registration(engine):
 
 
 def member_dashboard(engine, member_email):
+    view_member_fitness_goals(engine, member_email)
+    view_member_health_metrics(engine, member_email)
     while True:
         with Session(engine) as session:
             try:
