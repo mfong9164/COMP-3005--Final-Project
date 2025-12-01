@@ -139,13 +139,11 @@ def submitAdhocTime(engine, trainer):
             tsr = getInputtedHours(time_str, date)
             if not tsr:
                 continue
-            print(f'Trainer Email: {trainer.email}, TSR: {tsr}')
             time_ranges.append(TrainerAvailability(
                 trainer_email=trainer.email,
                 time_stamp_range=tsr,
                 availability_type=AvailabilityType.ADHOC
             ))
-            print('Added Time to List')
             
         except Exception as e:
             print(e)
