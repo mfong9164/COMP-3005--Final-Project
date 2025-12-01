@@ -122,9 +122,9 @@ def createGroupClass(engine, admin):
     while True:
         try:
             cap = int(input('\nPlease enter the capacity of the class: '))
-            if cap <= 0 or cap >= 20:
+            if cap < 0 or cap > 20:
                 print('Invalid Input, please enter a capacity between 1 and 20')
-                break;
+                continue
             break
         except Exception as e:
             print(e)
