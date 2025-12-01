@@ -8,6 +8,8 @@
 * Liam McAnulty (101309972)
 
 ### Project Video Demo Link
+Video Link: https://www.youtube.com/watch?v=k8grCX1jnFY 
+* Subtitles are available for the video
 
 ### **Project Overview**
 This project implements a Health and Fitness Club management system using PostgreSQL, Python, and SQLAlchemy (ORM). This program supports three roles which are Members, Trainers, and Administrators. The program handles core operations including member profiles, health metrics, billings, group fitness classes, maintenance, etc.
