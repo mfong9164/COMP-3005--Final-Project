@@ -107,6 +107,7 @@ def updateRecurringSchedule(engine, trainer):
         
         session.add_all(ranges)
         session.commit()
+        print('Updated Recurring Schedule')
 
 # trainer: Trainer
 def submitAdhocTime(engine, trainer):
@@ -139,21 +140,22 @@ def submitAdhocTime(engine, trainer):
             tsr = getInputtedHours(time_str, date)
             if not tsr:
                 continue
-            print(f'Trainer Email: {trainer.email}, TSR: {tsr}')
             time_ranges.append(TrainerAvailability(
                 trainer_email=trainer.email,
                 time_stamp_range=tsr,
                 availability_type=AvailabilityType.ADHOC
             ))
-            print('Added Time to List')
             
         except Exception as e:
             print(e)
-
-    with Session(engine) as session:
-        session.add_all(time_ranges)
-        session.commit()
-        print(f'Added {time_ranges}')
+    
+    try:
+        with Session(engine) as session:
+            session.add_all(time_ranges)
+            session.commit()
+            print(f'Added Adhoc Availability')
+    except:
+        print('Error Updating Schedule, please check that you do not have a previous schedule set')
 
 #trainer Trainer
 def viewAvailabilitySchedule(engine, trainer):
