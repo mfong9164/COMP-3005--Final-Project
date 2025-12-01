@@ -1,10 +1,14 @@
 from sqlalchemy.orm import Session, joinedload
+from sqlalchemy import func
 from models.member import Member
 from models.fitness_goal import FitnessGoal
 from operator import attrgetter
 from models.health_metric import HealthMetric
 from models.bill import Bill
 from models.group_fitness_bill import GroupFitnessBill
+from models.participates_in import ParticipatesIn
+from models.group_fitness_class import GroupFitnessClass
+from models.trainer import Trainer
 from models.enums import GoalType, PaymentMethod, Gender
 
 def member_menu(engine):
@@ -50,19 +54,56 @@ def member_login(engine):
             print(f"Error: {e}")
 
 def member_registration(engine):
-    # TODO: Liam's Member Registration Function
-    pass
+    while True:
+        with Session(engine) as session:
+            try:
+                print(f"\n=== Member Registration ===")
+                input_email = input("Email: ")
+                input_name = input("Name: ")
+                input_date_of_birth = input("Date of birth (YYYY-MM-DD): ")
+                input_gender = (input("Gender (Male, Female, Other): ").upper())
+                input_phone_number = input("Phone Number (##########): ")
+
+                session.add(Member(email=input_email,name=input_name,date_of_birth=input_date_of_birth,gender=input_gender,phone_number=input_phone_number))
+                session.commit()
+                break
+            except Exception as e:
+                print(f"Registration Error: {e}")
+                session.rollback()
 
 
 
 
 
 def member_dashboard(engine, member_email):
+    first_time = True
     while True:
         with Session(engine) as session:
             try:
                 member = session.query(Member).filter_by(email=member_email).first()
-
+                if (first_time):
+                    view_member_fitness_goals(engine, member_email)
+                    view_member_health_metrics(engine, member_email)
+                    try:
+                        parts_in = member.participations
+                        print(f"\n--- Upcoming Group Classes ---")
+                        for participants in parts_in:
+                            group_class = participants.fitness_class
+                            print(f"Class ID: {group_class.id}")
+                            print("Trainer: "+ group_class.trainer.name)
+                            print(f"Room ID: {group_class.room_id}")
+                            print(f"Time: {group_class.time_stamp_range}")
+                    except Exception as e:
+                        print(f"Error: {e}")
+                    try:
+                        print(f"\n--- Upcoming Personal Session ---")
+                        for session in member.personal_training_sessions:
+                            print("Trainer: "+session.trainer.name)
+                            print(f"Room ID: {session.room_id}")
+                            print(f"Time: {session.time_stamp_range}")
+                    except Exception as e:
+                        print(f"Error: {e}")
+                    first_time = False
                 print(f"\n=== {member.name} Dashboard ===")
                 print("1. Profile Management")
                 print("2. Health & Fitness")
@@ -82,8 +123,7 @@ def member_dashboard(engine, member_email):
                     manageBilling(engine, member_email)
                 
                 elif choice == "4":
-                    # TODO: Liam's class registration function
-                    pass
+                    joinGroupClass(engine, member_email)
 
                 elif choice == "5":
                     print("Logged out. Returning to Member Menu.")
@@ -613,3 +653,49 @@ def pay_bill(engine, member_email):
         print(f"Error: {e}")
         if 'session' in locals():
             session.rollback()
+
+def joinGroupClass(engine, member_email):
+    try:
+        with Session(engine) as session:
+            member = session.query(Member).filter_by(email=member_email).first()
+            group_classes = session.query(GroupFitnessClass)
+            for group_class in group_classes:
+                print(f"Class ID: {group_class.id}")
+                print("Trainer: "+ group_class.trainer.name)
+                print(f"Room ID: {group_class.room_id}")
+                print(f"Time: {group_class.time_stamp_range}")
+                print(f"Price: {group_class.price}")
+                print(f"Capacity: {group_class.capacity}")
+
+                print("\n Option:")
+                print("1. Join")
+                print("2. Next")
+                print("3. Quit")
+
+                choice = input("Enter choice (1, 2, or 3): ").strip()
+                
+                if choice == '1':
+                    if (len(group_class.participants) < group_class.capacity):
+                            overlaps = False
+                            for parts_in in member.participations:
+                                if group_class.time_stamp_range.overlaps(parts_in.fitness_class.time_stamp_range):
+                                    overlaps = True
+                            for parts_in in member.personal_training_sessions:
+                                if group_class.time_stamp_range.overlaps(parts_in.time_stamp_range):
+                                    overlaps = True
+                            if overlaps:
+                                print("\nSchedule Confilict")
+                            else:
+                                session.add(ParticipatesIn(member_email = member.email, class_id = group_class.id))
+                                session.commit
+                                print("\nClass Joined")
+                    else:
+                        print("\nClass at capacity")
+                    input("\nPress Enter")
+                elif choice == '2':
+                    pass
+                elif choice == '3':
+                    break
+    except Exception as e:
+        print(f"Error: {e}")
+        session.rollback()                

@@ -14,7 +14,8 @@ class Admin(Base):
 
     email = Column(
         String(255), 
-        primary_key=True
+        primary_key=True, 
+        unique=True
     
     )
     name = Column(
